@@ -2,31 +2,16 @@ const abi = {
   "ABI": [
     {
       "inputs": [
-        {
-          "internalType": "string",
-          "name": "collectionName",
-          "type": "string"
-        },
+        {"internalType": "string", "name": "collectionName", "type": "string"},
         {
           "internalType": "string",
           "name": "collectionSymbol",
           "type": "string"
         },
-        {
-          "internalType": "string",
-          "name": "collectionImage",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "description",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "owner_",
-          "type": "address"
-        }
+        {"internalType": "string", "name": "collectionImage", "type": "string"},
+        {"internalType": "string", "name": "description", "type": "string"},
+        {"internalType": "address", "name": "owner_", "type": "address"},
+        {"internalType": "string[]", "name": "category", "type": "string[]"}
       ],
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -110,11 +95,7 @@ const abi = {
       "inputs": [],
       "name": "_collectionHolderImage",
       "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
+        {"internalType": "string", "name": "", "type": "string"}
       ],
       "stateMutability": "view",
       "type": "function"
@@ -123,27 +104,15 @@ const abi = {
       "inputs": [],
       "name": "_description",
       "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
+        {"internalType": "string", "name": "", "type": "string"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
+        {"internalType": "address", "name": "to", "type": "address"},
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
       ],
       "name": "approve",
       "outputs": [],
@@ -152,43 +121,23 @@ const abi = {
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        }
+        {"internalType": "address", "name": "owner", "type": "address"}
       ],
       "name": "balanceOf",
       "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
+        {"internalType": "uint256", "name": "", "type": "uint256"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "string",
-          "name": "tokenURI",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        }
+        {"internalType": "string", "name": "tokenURI", "type": "string"},
+        {"internalType": "address", "name": "to", "type": "address"}
       ],
       "name": "createToken",
       "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
+        {"internalType": "uint256", "name": "", "type": "uint256"}
       ],
       "stateMutability": "payable",
       "type": "function"
@@ -197,11 +146,7 @@ const abi = {
       "inputs": [],
       "name": "currentTokenId",
       "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
+        {"internalType": "uint256", "name": "", "type": "uint256"}
       ],
       "stateMutability": "view",
       "type": "function"
@@ -210,73 +155,50 @@ const abi = {
       "inputs": [],
       "name": "getAllLiked",
       "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "",
-          "type": "address[]"
-        }
+        {"internalType": "address[]", "name": "", "type": "address[]"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
       ],
       "name": "getApproved",
       "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
+        {"internalType": "address", "name": "", "type": "address"}
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCategory",
+      "outputs": [
+        {"internalType": "string[]", "name": "", "type": "string[]"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
       ],
       "name": "getNFTsAllLiked",
       "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "",
-          "type": "address[]"
-        }
+        {"internalType": "address[]", "name": "", "type": "address[]"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "operator",
-          "type": "address"
-        }
+        {"internalType": "address", "name": "owner", "type": "address"},
+        {"internalType": "address", "name": "operator", "type": "address"}
       ],
       "name": "isApprovedForAll",
       "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
+        {"internalType": "bool", "name": "", "type": "bool"}
       ],
       "stateMutability": "view",
       "type": "function"
@@ -290,11 +212,7 @@ const abi = {
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId_",
-          "type": "uint256"
-        }
+        {"internalType": "uint256", "name": "tokenId_", "type": "uint256"}
       ],
       "name": "likeNFT",
       "outputs": [],
@@ -305,11 +223,7 @@ const abi = {
       "inputs": [],
       "name": "name",
       "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
+        {"internalType": "string", "name": "", "type": "string"}
       ],
       "stateMutability": "view",
       "type": "function"
@@ -318,51 +232,27 @@ const abi = {
       "inputs": [],
       "name": "owner",
       "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
+        {"internalType": "address", "name": "", "type": "address"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
       ],
       "name": "ownerOf",
       "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
+        {"internalType": "address", "name": "", "type": "address"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
+        {"internalType": "address", "name": "from", "type": "address"},
+        {"internalType": "address", "name": "to", "type": "address"},
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
       ],
       "name": "safeTransferFrom",
       "outputs": [],
@@ -371,26 +261,10 @@ const abi = {
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "data",
-          "type": "bytes"
-        }
+        {"internalType": "address", "name": "from", "type": "address"},
+        {"internalType": "address", "name": "to", "type": "address"},
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"},
+        {"internalType": "bytes", "name": "data", "type": "bytes"}
       ],
       "name": "safeTransferFrom",
       "outputs": [],
@@ -399,16 +273,8 @@ const abi = {
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "operator",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "approved",
-          "type": "bool"
-        }
+        {"internalType": "address", "name": "operator", "type": "address"},
+        {"internalType": "bool", "name": "approved", "type": "bool"}
       ],
       "name": "setApprovalForAll",
       "outputs": [],
@@ -417,11 +283,16 @@ const abi = {
     },
     {
       "inputs": [
-        {
-          "internalType": "string",
-          "name": "url",
-          "type": "string"
-        }
+        {"internalType": "string[]", "name": "cat", "type": "string[]"}
+      ],
+      "name": "setCategory",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {"internalType": "string", "name": "url", "type": "string"}
       ],
       "name": "setCollectionImage",
       "outputs": [],
@@ -430,19 +301,11 @@ const abi = {
     },
     {
       "inputs": [
-        {
-          "internalType": "bytes4",
-          "name": "interfaceId",
-          "type": "bytes4"
-        }
+        {"internalType": "bytes4", "name": "interfaceId", "type": "bytes4"}
       ],
       "name": "supportsInterface",
       "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
+        {"internalType": "bool", "name": "", "type": "bool"}
       ],
       "stateMutability": "view",
       "type": "function"
@@ -451,51 +314,27 @@ const abi = {
       "inputs": [],
       "name": "symbol",
       "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
+        {"internalType": "string", "name": "", "type": "string"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
       ],
       "name": "tokenURI",
       "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
+        {"internalType": "string", "name": "", "type": "string"}
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
+        {"internalType": "address", "name": "from", "type": "address"},
+        {"internalType": "address", "name": "to", "type": "address"},
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
       ],
       "name": "transfer",
       "outputs": [],
@@ -504,21 +343,9 @@ const abi = {
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
+        {"internalType": "address", "name": "from", "type": "address"},
+        {"internalType": "address", "name": "to", "type": "address"},
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
       ],
       "name": "transferFrom",
       "outputs": [],

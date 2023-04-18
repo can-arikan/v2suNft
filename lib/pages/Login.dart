@@ -264,7 +264,7 @@ class _LoginPageState extends State<Login> {
                                             await context.read<EthereumProvider>().setProvider(provider);
                                             await context.read<EthereumProvider>().setMetamaskUri(_uri);
                                             EthereumAddress address = EthereumAddress.fromHex(connector.session.accounts[0]);
-                                            var user = await query("getUser", [address])
+                                            dynamic user = (await query("getUser", [address])
                                             .onError((error, stackTrace) async {
                                               if (error is RPCError) {
                                                 Navigator.push(
@@ -274,15 +274,15 @@ class _LoginPageState extends State<Login> {
                                                 );
                                               }
                                               throw Exception(error);
-                                            });
+                                            }))[0].toString();
                                             user = user.replaceAll("[", "").replaceAll("]", "").split(",");
                                             User loggedInUser = User(
                                                 address: address.toString(),
                                                 username: user[0],
                                                 profilePicture: user[2],
                                                 email: user[1],
-                                                nftLikes: int.parse(await query("getUserLikedNFTs", [address])),
-                                                collectionLikes: int.parse(await query("getUserLikedCollections", [address]))
+                                                nftLikes: int.parse((await query("getUserLikedNFTs", [address]))[0].toString()),
+                                                collectionLikes: int.parse((await query("getUserLikedCollections", [address]))[0].toString())
                                             );
                                             await context.read<UserProvider>().setUser(loggedInUser);
                                             Navigator.push(

@@ -1,17 +1,53 @@
-const abi = {
-  "address": "0x075c54baa53b4477E29B426b65dd14CF5c4D3E99",
+var abi = {
+  "address": "0x2B1AD52b3A329e78293618166E9a5102D3DB88C2".toLowerCase(),
   "ABI": [
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "x",
-          "type": "address"
+          "internalType": "string",
+          "name": "_userName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "email",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "pictureUri",
+          "type": "string"
         }
       ],
-      "name": "addExternalCollection",
-      "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "collectionAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "collectionImage",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "internalType": "string[]",
+          "name": "categories",
+          "type": "string[]"
+        }
+      ],
+      "name": "addExistingCollection",
+      "outputs": [],
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -35,37 +71,14 @@ const abi = {
           "internalType": "string",
           "name": "description",
           "type": "string"
+        },
+        {
+          "internalType": "string[]",
+          "name": "categories",
+          "type": "string[]"
         }
       ],
       "name": "createCollection",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "collectionAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "price",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "owner_",
-          "type": "address"
-        }
-      ],
-      "name": "createMarketItem",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"
@@ -91,9 +104,9 @@ const abi = {
           "type": "address"
         },
         {
-          "internalType": "string",
-          "name": "tokenUri",
-          "type": "string"
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
         },
         {
           "internalType": "uint256",
@@ -102,18 +115,7 @@ const abi = {
         }
       ],
       "name": "createMarketToken",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "collectionId",
-          "type": "uint256"
-        }
-      ],
+      "outputs": [],
       "stateMutability": "payable",
       "type": "function"
     },
@@ -126,23 +128,12 @@ const abi = {
         },
         {
           "internalType": "string",
-          "name": "tokenURI",
+          "name": "tokenUri",
           "type": "string"
         }
       ],
       "name": "createToken",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
+      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -174,116 +165,6 @@ const abi = {
       "name": "deposit",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "price",
-          "type": "uint256"
-        }
-      ],
-      "name": "resellToken",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "x",
-          "type": "uint256"
-        }
-      ],
-      "name": "setListingPrice",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "_userName",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "email",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "pictureUri",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "emailAddress",
-          "type": "string"
-        }
-      ],
-      "name": "updateUserEmail",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        }
-      ],
-      "name": "updateUserName",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "pictureUri",
-          "type": "string"
-        }
-      ],
-      "name": "updateUserPicture",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_address",
-          "type": "address"
-        }
-      ],
-      "name": "collectionIdx",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -342,8 +223,14 @@ const abi = {
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "fetchItemsListed",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "who",
+          "type": "address"
+        }
+      ],
+      "name": "fetchMyListedItems",
       "outputs": [
         {
           "components": [
@@ -397,62 +284,13 @@ const abi = {
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "fetchMarketItems",
-      "outputs": [
+      "inputs": [
         {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "collection_address",
-              "type": "address"
-            },
-            {
-              "internalType": "string",
-              "name": "collection",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "description",
-              "type": "string"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "address payable",
-              "name": "owner",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bool",
-              "name": "sold",
-              "type": "bool"
-            }
-          ],
-          "internalType": "struct MarketItemHolder.MarketItem[]",
-          "name": "",
-          "type": "tuple[]"
+          "internalType": "address",
+          "name": "who",
+          "type": "address"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "fetchMyNFTs",
       "outputs": [
         {
@@ -545,6 +383,48 @@ const abi = {
     },
     {
       "inputs": [],
+      "name": "getCategories",
+      "outputs": [
+        {
+          "internalType": "string[]",
+          "name": "",
+          "type": "string[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "catName",
+          "type": "string"
+        }
+      ],
+      "name": "getCategoryByName",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "getCollectionCount",
       "outputs": [
         {
@@ -576,6 +456,19 @@ const abi = {
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "getMarketItemCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -583,7 +476,7 @@ const abi = {
           "type": "address"
         }
       ],
-      "name": "getCollections",
+      "name": "getMyCollections",
       "outputs": [
         {
           "components": [
@@ -621,37 +514,16 @@ const abi = {
               "internalType": "uint256",
               "name": "collectionNftLikes",
               "type": "uint256"
+            },
+            {
+              "internalType": "string[]",
+              "name": "collectionCategories",
+              "type": "string[]"
             }
           ],
           "internalType": "struct CollectionHolder.CollectionJSON[]",
           "name": "",
           "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getListingPrice",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getMarketItemCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -742,6 +614,81 @@ const abi = {
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string[]",
+          "name": "categories",
+          "type": "string[]"
+        },
+        {
+          "internalType": "string[]",
+          "name": "f_pictures",
+          "type": "string[]"
+        },
+        {
+          "internalType": "string[]",
+          "name": "b_pictures",
+          "type": "string[]"
+        }
+      ],
+      "name": "setCategories",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "x",
+          "type": "uint256"
+        }
+      ],
+      "name": "setListingPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "emailAddress",
+          "type": "string"
+        }
+      ],
+      "name": "updateUserEmail",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "updateUserName",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "pictureUri",
+          "type": "string"
+        }
+      ],
+      "name": "updateUserPicture",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ]

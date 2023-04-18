@@ -10,13 +10,6 @@ class Category {
 
   String get pk => name;
 
-  Future<List<NFTCollection>> get collections async {
-    final List JSONList = await MarketHelper.query("nftcollections", [ {"collection": pk} ]);
-    List<NFTCollection> collections =
-    JSONList.map((item) => NFTCollection.fromJson(item)).toList();
-    return collections;
-  }
-
   @override
   String toString() => "Category(name: $name, background: $backgroundPicture, foreground: $foregroundPicture)";
 

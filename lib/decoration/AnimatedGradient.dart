@@ -1,12 +1,13 @@
-
 import 'package:flutter/material.dart';
 
 class AnimatedGradient extends StatefulWidget {
+  const AnimatedGradient({Key? key}) : super(key: key);
+
   @override
-  _AnimatedGradientState createState() => _AnimatedGradientState();
+  AnimatedGradientState createState() => AnimatedGradientState();
 }
 
-class _AnimatedGradientState extends State<AnimatedGradient> {
+class AnimatedGradientState extends State<AnimatedGradient> {
   List<Color> colorList = [
     Colors.cyan.shade900,
     Colors.deepPurple.shade900,
@@ -35,7 +36,7 @@ class _AnimatedGradientState extends State<AnimatedGradient> {
         body: Stack(
           children: [
             AnimatedContainer(
-              duration: Duration(seconds: 5),
+              duration: const Duration(seconds: 5),
               onEnd: () {
                 setState(() {
                   index = index + 1;

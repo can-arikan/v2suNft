@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:sunftmobilev3/helpers/marketHelper.dart' as market_helper;
 import 'package:sunftmobilev3/models/Nft.dart';
 import 'package:sunftmobilev3/models/NftCollection.dart';
+import 'package:sunftmobilev3/models/Category.dart' as categories;
 import 'package:web3dart/credentials.dart';
 import '../backend/requests.dart';
 
@@ -39,7 +42,7 @@ class User {
       "User(address: $address, username: $username, profilePicture: $profilePicture, email: $email, NFTLikes: $nftLikes, collectionLikes: $collectionLikes)";
 
   Future<List<NFT>> get ownedNFTs async {
-    var response = await market_helper.query("fetchMyNFTs", []) as List<dynamic>;
+    var response = (await market_helper.query("fetchMyNFTs", []))[0].toString() as List<dynamic>;
     var nfts = response.map((e) => NFT(
         address: e["collection_address"],
         nID: e["nID"],
@@ -96,14 +99,13 @@ class User {
 
     return watchListedCollections;
   }
-
   Future<List<NFTCollection>> get ownedCollections async {
-    var jsonList = await market_helper.query("getCollections", [EthereumAddress.fromHex(address)])
-    .onError((error, stackTrace) {
+    dynamic jsonList = (await market_helper.query("getCollections", [EthereumAddress.fromHex(address)])
+        .onError((error, stackTrace) {
       if (kDebugMode) {
         print(error);
       }
-    });
+    }))[0].toString();
     jsonList = jsonList.replaceAll("[", "").replaceAll("]", "").split(",");
     List<String> jsonStrList = jsonList;
     List<List<String>> jsonListList = List.empty(growable: true);
@@ -116,6 +118,31 @@ class User {
     }
     List<NFTCollection> ownedCollections = jsonListList.map((item) => NFTCollection.fromJson(item)).toList();
     return ownedCollections;
+  }
+  Future<List<categories.Category>> get availableCategories async {
+    dynamic response = await market_helper.query("getCategories", [])
+    .onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+      }
+    });
+    dynamic categoryNames = response[0];
+    List<categories.Category> cats = List.empty(growable: true);
+    for (var e in categoryNames) {
+      dynamic categoryVars = await market_helper.query("getCategoryByName", [e.toString()])
+          .onError((error, stackTrace) {
+        if (kDebugMode) {
+          print(error);
+        }
+      });
+      var newCat = categories.Category(
+          name: categoryVars[0],
+          backgroundPicture: categoryVars[1],
+          foregroundPicture: categoryVars[2]
+      );
+      cats.add(newCat);
+    }
+    return cats;
   }
   Future<bool> watchLists(String address) async {
     List isCollectionFollowed = await getRequest("watchLists", {"user": pk,"nftCollection": address});

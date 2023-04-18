@@ -3,7 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:sunftmobilev3/helpers/UserHelper.dart';
 import 'package:sunftmobilev3/helpers/marketHelper.dart';
+import 'package:sunftmobilev3/models/Category.dart';
 import 'package:sunftmobilev3/pages/MainApplication.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -13,6 +18,8 @@ import 'package:sunftmobilev3/decoration/CreateCollectionDecoration.dart'
     as decoration;
 
 import '../helpers/IpfsLoader.dart';
+import '../models/User.dart';
+import '../providers/UserProvider.dart';
 import '../providers/ethereumProvider.dart';
 
 class CreateCollectionPage extends StatefulWidget {
@@ -27,6 +34,7 @@ class _CreateCollectionPageState extends State<CreateCollectionPage> {
   TextEditingController collectionNameControl = TextEditingController();
   TextEditingController collectionDescriptionControl = TextEditingController();
   TextEditingController collectionSymbolControl = TextEditingController();
+  var _selectedCategories;
 
   Future pickImage(type) async {
     final image = await ImagePicker().pickImage(source: type);
@@ -38,6 +46,7 @@ class _CreateCollectionPageState extends State<CreateCollectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       body: Stack(children: [
         Positioned(child: AnimatedGradient()),
@@ -119,6 +128,29 @@ class _CreateCollectionPageState extends State<CreateCollectionPage> {
                           .collectionContainer("Description of Collection"),
                       controller: collectionDescriptionControl,
                     )),
+                Container(
+                  margin: const EdgeInsets.all(10.0),
+                  width: MediaQuery.of(context).size.width * 3 / 4,
+                  child: FutureBuilder<List<Category>>(
+                    future: user?.availableCategories,
+                    builder: (context, snapshot) {
+                      return MultiSelectDialogField(
+                        decoration: decoration.imagePickerDecoration,
+                        buttonText: Text(
+                          "Categories",
+                          style: decoration.collectionTextDecoration,
+                        ),
+                        searchHint: "Categories",
+                        searchHintStyle: decoration.collectionTextDecoration,
+                        items: snapshot.data != null ? snapshot.data!.map((e) => MultiSelectItem(e.name, e.name)).toList() : <MultiSelectItem>[],
+                        listType: MultiSelectListType.CHIP,
+                        onConfirm: (values) {
+                          _selectedCategories = values;
+                        },
+                      );
+                    }
+                  )
+                ),
                 (imagePath != null)
                     ? SizedBox(
                         width: 100, height: 100, child: Image.file(imagePath!))

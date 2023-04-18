@@ -21,7 +21,7 @@ Future<dynamic> query(String functionName, List<dynamic> parameters) async{
     }
     rethrow;
   }
-  return response[0].toString();
+  return response;
 }
 
 Future<dynamic> callContract(BuildContext context, String functionName, List<dynamic> parameters) async {
