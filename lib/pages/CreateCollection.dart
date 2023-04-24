@@ -231,7 +231,7 @@ class _CreateCollectionPageState extends State<CreateCollectionPage> {
     var ipfsResult = await uploadIpfs(imagePath!);
     ipfsResult = const JsonDecoder().convert(ipfsResult.toString());
     var uri = await context.read<EthereumProvider>().getMetamaskUri();
-    dynamic value = (await query("getListingPrice", []))[0];
+    dynamic value = (await query("listingPrice", []))[0];
     callContract(context, "createCollection", [
       collectionNameControl.text,
       collectionSymbolControl.text,
