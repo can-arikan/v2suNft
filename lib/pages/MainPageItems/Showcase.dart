@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:sunftmobilev3/components/Containers/CategoryContainer.dart';
 import 'package:sunftmobilev3/components/Containers/NFTTrendingContainer.dart';
 import 'package:sunftmobilev3/components/ListViewContainer.dart';
@@ -32,7 +31,7 @@ class _ShowcaseState extends State<Showcase> {
               style: decoration.collectionInfoDecoration
             ),
           ),
-          Container(
+          SizedBox(
             height: MediaQuery
                 .of(context)
                 .size
@@ -40,7 +39,7 @@ class _ShowcaseState extends State<Showcase> {
 
             child: ListViewContainer<Category,CategoryContainer>(
               parameterizedContainerConstructor: CategoryContainer.parameterized,
-              future: getCategories(null),direction: Axis.horizontal,)
+              future: getCategories(),direction: Axis.horizontal,)
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -48,7 +47,7 @@ class _ShowcaseState extends State<Showcase> {
             style: decoration.collectionInfoDecoration,
             ),
           ),
-          Container(
+          SizedBox(
               height: MediaQuery
                   .of(context)
                   .size
@@ -66,7 +65,7 @@ class _ShowcaseState extends State<Showcase> {
 
             ),
           ),
-          Container(
+          SizedBox(
               height: MediaQuery
                   .of(context)
                   .size

@@ -6,8 +6,7 @@ import 'package:web3dart/web3dart.dart';
 
 import '../models/Credentials.dart';
 
-
-Future<dynamic> query(String functionName, List<dynamic> parameters) async{
+Future<dynamic> query(String functionName, List<dynamic> parameters) async {
   var contractFunction =  ethereumProvider.suNFTmarketContract.function(functionName);
   List<dynamic> response;
   try {
@@ -24,8 +23,10 @@ Future<dynamic> query(String functionName, List<dynamic> parameters) async{
   return response;
 }
 
-Future<dynamic> callContract(BuildContext context, String functionName, List<dynamic> parameters) async {
-  var contractFunction =  ethereumProvider.suNFTmarketContract.function(functionName);
+Future<dynamic> callContract(BuildContext context, String functionName, List<dynamic> parameters,
+    {EtherAmount? value}) async {
+  value = value ?? EtherAmount.zero();
+  var contractFunction = ethereumProvider.suNFTmarketContract.function(functionName);
   var provider = await context.read<ethereumProvider.EthereumProvider>().getProvider();
   provider = provider ?? (throw Exception("Provider Is Not In The Context !!!"));
   var cred = WalletConnectEthereumCredentials(provider: provider!);
@@ -39,6 +40,7 @@ Future<dynamic> callContract(BuildContext context, String functionName, List<dyn
           parameters: parameters,
           from: EthereumAddress.fromHex(
               cred.provider.connector.session.accounts[0]),
+          value: value
         ),
         chainId: 80001
     );

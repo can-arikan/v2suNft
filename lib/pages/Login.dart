@@ -274,13 +274,12 @@ class _LoginPageState extends State<Login> {
                                                 );
                                               }
                                               throw Exception(error);
-                                            }))[0].toString();
-                                            user = user.replaceAll("[", "").replaceAll("]", "").split(",");
+                                            }))[0];
                                             User loggedInUser = User(
                                                 address: address.toString(),
                                                 username: user[0],
-                                                profilePicture: user[2],
-                                                email: user[1],
+                                                profilePicture: user[1],
+                                                email: user[2],
                                                 nftLikes: int.parse((await query("getUserLikedNFTs", [address]))[0].toString()),
                                                 collectionLikes: int.parse((await query("getUserLikedCollections", [address]))[0].toString())
                                             );

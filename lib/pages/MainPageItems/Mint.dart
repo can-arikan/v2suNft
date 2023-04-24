@@ -8,8 +8,10 @@ import "package:sunftmobilev3/decoration/MainPageItemsDecoration/MintDecoration.
 import 'package:image_picker/image_picker.dart';
 import 'package:sunftmobilev3/models/NftCollection.dart';
 import 'package:provider/provider.dart';
+import 'package:sunftmobilev3/pages/MainApplication.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:web3dart/credentials.dart';
+import 'package:web3dart/web3dart.dart';
 
 import '../../helpers/IpfsLoader.dart';
 import '../../helpers/marketHelper.dart';
@@ -17,6 +19,7 @@ import '../../models/User.dart';
 import '../../providers/UserProvider.dart';
 import '../../providers/ethereumProvider.dart';
 import '../CreateCollection.dart';
+import '../../helpers/NFTCollectionHelper.dart' as NFTCollectionHelper;
 
 class Mint extends StatefulWidget {
   const Mint({Key? key}) : super(key: key);
@@ -62,8 +65,11 @@ class _MintState extends State<Mint> {
     var nftIpfs = "https://cloudflare-ipfs.com/ipfs/${ipfsResult["Hash"]}";
 
     var uri = await context.read<EthereumProvider>().getMetamaskUri();
-    callContract(context, "createToken",
-        [EthereumAddress.fromHex(chosenNFTCollection!.address!), nftIpfs]);
+    var user = await context.read<UserProvider>().user;
+    NFTCollectionHelper.callContract(context, "createToken",
+        [nftIpfs, EthereumAddress.fromHex(user!.address)],
+        contractAddress: chosenNFTCollection!.address!,
+        value: EtherAmount.zero());
     await launchUrlString(uri!, mode: LaunchMode.externalApplication);
   }
 
@@ -118,6 +124,7 @@ class _MintState extends State<Mint> {
                                     const CreateCollectionPage()));
                       } else {
                         if (snapshot.data != null) {
+                          print(snapshot.data);
                           var idx = int.parse(change
                               .toString()
                               .substring(11, change.toString().indexOf(" (")));
@@ -222,6 +229,11 @@ class _MintState extends State<Mint> {
           child: GestureDetector(
             onTap: () async {
               await mintNFT();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      MainPage()));
             },
             child: Container(
               margin: const EdgeInsets.fromLTRB(10, 80, 10, 10),

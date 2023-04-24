@@ -100,23 +100,26 @@ class User {
     return watchListedCollections;
   }
   Future<List<NFTCollection>> get ownedCollections async {
-    dynamic jsonList = (await market_helper.query("getCollections", [EthereumAddress.fromHex(address)])
+    dynamic jsonList = (await market_helper.query("getMyCollections", [EthereumAddress.fromHex(address)])
         .onError((error, stackTrace) {
       if (kDebugMode) {
         print(error);
       }
-    }))[0].toString();
-    jsonList = jsonList.replaceAll("[", "").replaceAll("]", "").split(",");
-    List<String> jsonStrList = jsonList;
-    List<List<String>> jsonListList = List.empty(growable: true);
-    for (int i = 0; i < (jsonStrList.length / 7); i++) {
-      List<String> subList = List.empty(growable: true);
-      for (int j = 0; j < 7; j++) {
-        subList.add(jsonStrList[(i * 7) + j].trim());
-      }
-      jsonListList.add(subList);
+    }))[0];
+    List<Map<String, dynamic>> itemList = List.empty(growable: true);
+    for (var i = 0; i < jsonList.length; i++){
+      Map<String, dynamic> convert = {};
+      convert["address"] = jsonList[i][1];
+      convert["name"] = jsonList[i][0];
+      convert["collectionImage"] = jsonList[i][2];
+      convert["description"] = jsonList[i][3];
+      convert["numLikes"] = jsonList[i][4];
+      convert["owner"] = jsonList[i][5];
+      convert["categories"] = jsonList[i][7];
+      convert["nftLikes"] = jsonList[i][6];
+      itemList.add(convert);
     }
-    List<NFTCollection> ownedCollections = jsonListList.map((item) => NFTCollection.fromJson(item)).toList();
+    List<NFTCollection> ownedCollections = itemList.map((item) => NFTCollection.fromJson(item)).toList();
     return ownedCollections;
   }
   Future<List<categories.Category>> get availableCategories async {

@@ -1,27 +1,6 @@
 var abi = {
-  "address": "0x2B1AD52b3A329e78293618166E9a5102D3DB88C2".toLowerCase(),
+  "address": "0x673FA8265310c118393353f40970c7382efA7D34".toLowerCase(),
   "ABI": [
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "_userName",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "email",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "pictureUri",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
     {
       "inputs": [
         {
@@ -165,6 +144,102 @@ var abi = {
       "name": "deposit",
       "outputs": [],
       "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string[]",
+          "name": "categories",
+          "type": "string[]"
+        },
+        {
+          "internalType": "string[]",
+          "name": "f_pictures",
+          "type": "string[]"
+        },
+        {
+          "internalType": "string[]",
+          "name": "b_pictures",
+          "type": "string[]"
+        }
+      ],
+      "name": "setCategories",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "x",
+          "type": "uint256"
+        }
+      ],
+      "name": "setListingPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_userName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "email",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "pictureUri",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "emailAddress",
+          "type": "string"
+        }
+      ],
+      "name": "updateUserEmail",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "updateUserName",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "pictureUri",
+          "type": "string"
+        }
+      ],
+      "name": "updateUserPicture",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -457,6 +532,19 @@ var abi = {
     },
     {
       "inputs": [],
+      "name": "getListingPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "getMarketItemCount",
       "outputs": [
         {
@@ -517,7 +605,7 @@ var abi = {
             },
             {
               "internalType": "string[]",
-              "name": "collectionCategories",
+              "name": "categories",
               "type": "string[]"
             }
           ],
@@ -614,81 +702,6 @@ var abi = {
         }
       ],
       "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string[]",
-          "name": "categories",
-          "type": "string[]"
-        },
-        {
-          "internalType": "string[]",
-          "name": "f_pictures",
-          "type": "string[]"
-        },
-        {
-          "internalType": "string[]",
-          "name": "b_pictures",
-          "type": "string[]"
-        }
-      ],
-      "name": "setCategories",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "x",
-          "type": "uint256"
-        }
-      ],
-      "name": "setListingPrice",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "emailAddress",
-          "type": "string"
-        }
-      ],
-      "name": "updateUserEmail",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        }
-      ],
-      "name": "updateUserName",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "pictureUri",
-          "type": "string"
-        }
-      ],
-      "name": "updateUserPicture",
-      "outputs": [],
-      "stateMutability": "nonpayable",
       "type": "function"
     }
   ]

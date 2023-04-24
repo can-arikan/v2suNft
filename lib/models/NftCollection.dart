@@ -31,13 +31,13 @@ class NFTCollection {
   final String collectionImage;
   final String owner;
   int numLikes;
-  final String? category;
+  final List<String>? categories;
   int nftLikes;
 
   String? get pk => address;
 
   NFTCollection({ this.address, required this.name, required this.description,
-    required this.collectionImage,required this.category, this.numLikes = 0,
+    required this.collectionImage,required this.categories, this.numLikes = 0,
     this.nftLikes = 0, required this.owner });
 
   // Future<NFTCollection> fromContractAddress(String address) async {
@@ -47,16 +47,20 @@ class NFTCollection {
   //   return NFTCollection();
   // }
 
-  factory NFTCollection.fromJson(List<String> json) {
+  factory NFTCollection.fromJson(Map<String, dynamic> json) {
+    List<String> categories = List.empty(growable: true);
+    for (var i = 0; i < json["categories"].length; i++){
+      categories.add(json["categories"][i].toString());
+    }
     return NFTCollection(
-      address: json[1],
-      name: json[0],
-      collectionImage: json[2],
-      description: json[3],
-      numLikes: int.parse(json[4]),
-      owner: json[5],
-      category: "TODO",
-      nftLikes: int.parse(json[6]),
+      address: json["address"].toString(),
+      name: json["name"].toString(),
+      collectionImage: json["collectionImage"].toString(),
+      description: json["description"].toString(),
+      numLikes: json["numLikes"].toInt(),
+      owner: json["owner"].toString(),
+      categories: categories,
+      nftLikes: json["nftLikes"].toInt()
     );
   }
 
@@ -68,7 +72,7 @@ class NFTCollection {
     'collectionImage':collectionImage,
     'numLikes': numLikes,
     'owner': owner,
-    'category': category,
+    'categories': categories,
     "NFTLikes": nftLikes,
   };
 
@@ -82,6 +86,6 @@ class NFTCollection {
   }
 
   @override
-  String toString() => "NFTCollection(address: $address, name: $name, description: $description, collectionImage: $collectionImage, numLikes: $numLikes, owner: $owner, category: $category, NFTLikes: $nftLikes)";
+  String toString() => "NFTCollection(address: $address, name: $name, description: $description, collectionImage: $collectionImage, numLikes: $numLikes, owner: $owner, categories: $categories, NFTLikes: $nftLikes)";
 
 }

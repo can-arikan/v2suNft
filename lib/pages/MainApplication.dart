@@ -37,7 +37,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
-              Positioned(
+              const Positioned(
                   child: AnimatedGradient()
               ),
               Positioned(

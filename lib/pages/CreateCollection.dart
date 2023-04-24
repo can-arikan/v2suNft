@@ -6,12 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
-import 'package:sunftmobilev3/helpers/UserHelper.dart';
 import 'package:sunftmobilev3/helpers/marketHelper.dart';
 import 'package:sunftmobilev3/models/Category.dart';
 import 'package:sunftmobilev3/pages/MainApplication.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:web3dart/web3dart.dart';
 
 import '../Decoration/AnimatedGradient.dart';
 import 'package:sunftmobilev3/decoration/CreateCollectionDecoration.dart'
@@ -231,12 +231,14 @@ class _CreateCollectionPageState extends State<CreateCollectionPage> {
     var ipfsResult = await uploadIpfs(imagePath!);
     ipfsResult = const JsonDecoder().convert(ipfsResult.toString());
     var uri = await context.read<EthereumProvider>().getMetamaskUri();
+    dynamic value = (await query("getListingPrice", []))[0];
     callContract(context, "createCollection", [
       collectionNameControl.text,
       collectionSymbolControl.text,
       "https://cloudflare-ipfs.com/ipfs/${ipfsResult["Hash"]}",
-      collectionDescriptionControl.text
-    ]);
+      collectionDescriptionControl.text,
+      _selectedCategories
+    ], value: EtherAmount.inWei(value));
     await launchUrlString(uri!, mode: LaunchMode.externalApplication);
   }
 }
