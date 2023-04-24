@@ -54,7 +54,7 @@ class _NFTContainerState extends State<NFTContainer> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => NFTPage(NFTInfo: widget.nft))
+          MaterialPageRoute(builder: (context) => NFTPage(nftInfo: widget.nft))
         );
       },
       child: Container(

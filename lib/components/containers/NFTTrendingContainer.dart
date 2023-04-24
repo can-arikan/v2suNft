@@ -18,7 +18,7 @@ class _NFTTrendingContainer extends State<NFTTrendingContainer> {
       onTap: ()=>{
       Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => NFTPage(NFTInfo: widget.nft))
+      MaterialPageRoute(builder: (context) => NFTPage(nftInfo: widget.nft))
       )
 
       },

@@ -30,15 +30,15 @@ CONDITIONS:
   else: user sees the item is not on market
  */
 class NFTPage extends StatefulWidget {
-  final NFT NFTInfo;
+  final NFT nftInfo;
 
-  const NFTPage({Key? key, required this.NFTInfo}) : super(key: key);
+  const NFTPage({Key? key, required this.nftInfo}) : super(key: key);
 
   @override
-  _NFTPageState createState() => _NFTPageState();
+  NFTPageState createState() => NFTPageState();
 }
 
-class _NFTPageState extends State<NFTPage> {
+class NFTPageState extends State<NFTPage> {
   GestureDetector paymentContainer(String marketStatus, bool isOwner) {
     String textOfBox = marketStatus;
     bool isActive = false;
@@ -81,15 +81,14 @@ class _NFTPageState extends State<NFTPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.NFTInfo.name),
+        title: Text(widget.nftInfo.name),
         backgroundColor: decoration.appBarColor,
       ),
       body: FutureBuilder<List<TransactionHistory>>(
-          future: widget.NFTInfo.transactionHistory,
+          future: widget.nftInfo.transactionHistory,
           builder: (context, snapshot) {
             // list of transaction histories is visible here
-            print(snapshot.data);
-            return Container(
+            return SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: Stack(
@@ -102,11 +101,11 @@ class _NFTPageState extends State<NFTPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image(image: NetworkImage(widget.NFTInfo.dataLink)),
+                          Image(image: NetworkImage(widget.nftInfo.dataLink)),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                             child: Text(
-                              "Address: ${widget.NFTInfo.address}",
+                              "Address: ${widget.nftInfo.address}",
                               style: decoration.addressOfNftText,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -115,15 +114,14 @@ class _NFTPageState extends State<NFTPage> {
                             color: Colors.white,
                             width: MediaQuery.of(context).size.width * 3 / 4,
                             height: 3,
-                            margin: EdgeInsets.symmetric(vertical: 20),
+                            margin: const EdgeInsets.symmetric(vertical: 20),
                           ),
-                          paymentContainer(widget.NFTInfo.marketStatus,
-                              widget.NFTInfo.owner == user?.address),
-
+                          paymentContainer(widget.nftInfo.marketStatus,
+                              widget.nftInfo.owner == user?.address),
                           //price history container.
                           Container(
                             width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.only(left: 10, bottom: 20),
+                            margin: const EdgeInsets.only(left: 10, bottom: 20),
                             child: Text(
                               "Transaction History",
                               textAlign: TextAlign.start,
@@ -147,13 +145,13 @@ class _NFTPageState extends State<NFTPage> {
                                 margin: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 10),
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
                                   color: decoration.listTileColor,
                                 ),
                                 child: FutureBuilder<User?>(
                                     future:
-                                        getUser(address: widget.NFTInfo.owner),
+                                        getUser(address: widget.nftInfo.owner),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return ListTile(
@@ -162,13 +160,13 @@ class _NFTPageState extends State<NFTPage> {
                                             style:
                                                 decoration.listTileTitleStyle,
                                           ),
-                                          subtitle: Text(widget.NFTInfo.owner),
+                                          subtitle: Text(widget.nftInfo.owner),
                                           leading: CircleAvatar(
                                             backgroundColor: Colors.black,
                                             backgroundImage: NetworkImage(
                                                 snapshot.data!.profilePicture),
                                           ),
-                                          trailing: Text("Owner"),
+                                          trailing: const Text("Owner"),
                                         );
                                       } else {
                                         return const SizedBox(
@@ -191,7 +189,7 @@ class _NFTPageState extends State<NFTPage> {
                                 ),
                                 child: FutureBuilder<User?>(
                                     future: getUser(
-                                        address: widget.NFTInfo.creator),
+                                        address: widget.nftInfo.creator),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return ListTile(
@@ -201,7 +199,7 @@ class _NFTPageState extends State<NFTPage> {
                                                 decoration.listTileTitleStyle,
                                           ),
                                           subtitle:
-                                              Text(widget.NFTInfo.creator),
+                                              Text(widget.nftInfo.creator),
                                           leading: CircleAvatar(
                                             backgroundColor: Colors.black,
                                             backgroundImage: NetworkImage(
