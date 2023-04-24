@@ -17,21 +17,22 @@ import '../Decoration/AnimatedGradient.dart';
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController photoController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController photoController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: decoration.registerBackground,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
-              Positioned(
+              const Positioned(
                 child: AnimatedGradient(),
               ),
               Positioned(
