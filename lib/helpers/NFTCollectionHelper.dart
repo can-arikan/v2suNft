@@ -63,7 +63,7 @@ Future<dynamic> query(String functionName, List<dynamic> parameters, String cont
   var contractFunction = contract.function(functionName);
   List<dynamic> response;
   try {
-    response = await ethereumProvider.ethClient.call(contract: ethereumProvider.suNFTmarketContract, function: contractFunction , params: parameters);
+    response = await ethereumProvider.ethClient.call(contract: contract, function: contractFunction , params: parameters);
   } catch (error, trace) {
     if (kDebugMode) {
       print(error);

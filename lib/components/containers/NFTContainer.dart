@@ -144,9 +144,6 @@ class _NFTContainerState extends State<NFTContainer> {
                                   CupertinoIcons.heart_fill,
                                   color: (userLikedNft == null) ?( (oldState) ? Colors.white : Colors.red) : (userLikedNft!) ? Colors.red:Colors.white,
                                 )
-
-
-
                           ),
                               Text(
                                 widget.nft.likeCount.toString(),
@@ -158,13 +155,9 @@ class _NFTContainerState extends State<NFTContainer> {
                       ],
                     ),
                   ),
-
-
                 ],
               ),
             ),
-
-
           ],
         ),
       ),

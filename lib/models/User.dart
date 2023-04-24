@@ -57,23 +57,23 @@ class User {
     var all_market_items = (await market_helper.query("fetchAllMarketItems", []))[0];
     List<NFT> nfts = List.empty(growable: true);
     for (var i = 0; i < market_response.length; i++) {
-      var response = (await collection_helper.query("getUsersNFTs", [EthereumAddress.fromHex(address)], market_response[i][1]))[0];
+      var response = (await collection_helper.query("getUserNFTs", [EthereumAddress.fromHex(address)], market_response[i][1].toString()))[0];
       for (var j = 0; j < response.length; j++) {
-        dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [response[j][1].toInt()], market_response[i][1]))[0];
-        dynamic jsonNft = get(response[j][0]);
+        dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [response[j][1]], market_response[i][1].toString()))[0].length;
+        dynamic jsonNft = const JsonDecoder().convert((await get(Uri.parse(response[j][0]))).body);
         dynamic tmpNft = {
-          "address": market_response[i][1],
+          "address": market_response[i][1].toString(),
           "tokenId": response[j][1]
         };
         dynamic status = isInMarket(all_market_items, tmpNft);
         status = status != -1 ? all_market_items[i][7] ? "Sold": "Active": "Not In Market";
         NFT tmp = NFT(
-            address: market_response[i][1],
+            address: market_response[i][1].toString(),
             name: jsonNft["name"],
             description: jsonNft["description"],
-            dataLink: jsonNft["dataLink"],
+            dataLink: jsonNft["image"],
             collectionName: market_response[i][0],
-            creator: market_response[i][5],
+            creator: market_response[i][5].toString(),
             owner: address,
             tokenId: response[j][1],
             marketStatus: status,

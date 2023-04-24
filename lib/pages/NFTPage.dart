@@ -30,41 +30,20 @@ CONDITIONS:
   else: user sees the item is not on market
  */
 class NFTPage extends StatefulWidget {
-  const NFTPage({Key? key, required this.NFTInfo}) : super(key: key);
   final NFT NFTInfo;
+
+  const NFTPage({Key? key, required this.NFTInfo}) : super(key: key);
 
   @override
   _NFTPageState createState() => _NFTPageState();
 }
 
 class _NFTPageState extends State<NFTPage> {
-  GestureDetector paymentContainer(int marketStatus, bool isOwner) {
-    String textOfBox = "";
-    bool isActive = true;
-    if (marketStatus == 0) {
-      textOfBox = "This item is not on market";
-      isActive = false;
-    } else if (marketStatus == 1) {
-      if (isOwner) {
-        textOfBox = "Sell/Auction off this NFT";
-      } else {
-        textOfBox = "This item is not for sale";
-        isActive = false;
-      }
-    } else if (marketStatus == 2) {
-      if (isOwner) {
-        textOfBox = "NFT is currently on sale";
-        isActive = false;
-      } else {
-        textOfBox = "Buy this NFT";
-      }
-    } else if (marketStatus == 3) {
-      if (isOwner) {
-        textOfBox = "NFT is currently on sale";
-        isActive = false;
-      } else {
-        textOfBox = "Bid on this NFT";
-      }
+  GestureDetector paymentContainer(String marketStatus, bool isOwner) {
+    String textOfBox = marketStatus;
+    bool isActive = false;
+    if (isOwner && textOfBox == "Not In Market") {
+      isActive = true;
     }
 
     return GestureDetector(

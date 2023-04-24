@@ -9,8 +9,8 @@ class NFT {
   final String collectionName;
   final String creator;
   final String owner;
-  final int marketStatus;
-  final int tokenId;
+  final String marketStatus;
+  final BigInt tokenId;
   int likeCount;
 
   NFT({ required this.address, required this.name,
