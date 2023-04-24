@@ -1,5 +1,5 @@
 var abi = {
-  "address": "0x8d660a32Ec30dD59217BA9E1B61eF43e45De49c7".toLowerCase(),
+  "address": "0x6982947e0B522fDA7F5B4b50089b61db15Bd027E".toLowerCase(),
   "ABI": [
     {
       "inputs": [
@@ -273,128 +273,6 @@ var abi = {
       "inputs": [
         {
           "internalType": "address",
-          "name": "who",
-          "type": "address"
-        }
-      ],
-      "name": "fetchMyListedItems",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "collection_address",
-              "type": "address"
-            },
-            {
-              "internalType": "string",
-              "name": "collection",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "description",
-              "type": "string"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "address payable",
-              "name": "owner",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bool",
-              "name": "sold",
-              "type": "bool"
-            }
-          ],
-          "internalType": "struct MarketItemHolder.MarketItem[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "who",
-          "type": "address"
-        }
-      ],
-      "name": "fetchMyNFTs",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "collection_address",
-              "type": "address"
-            },
-            {
-              "internalType": "string",
-              "name": "collection",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "description",
-              "type": "string"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "address payable",
-              "name": "owner",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bool",
-              "name": "sold",
-              "type": "bool"
-            }
-          ],
-          "internalType": "struct MarketItemHolder.MarketItem[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "owner_",
           "type": "address"
         },
@@ -410,6 +288,61 @@ var abi = {
           "internalType": "bool",
           "name": "",
           "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAllCollections",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "collectionName",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "collectionAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "collectionImage",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "collectionDescription",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collectionLikesCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "collectionOwner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collectionNftLikes",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string[]",
+              "name": "categories",
+              "type": "string[]"
+            }
+          ],
+          "internalType": "struct CollectionHolder.CollectionJSON[]",
+          "name": "",
+          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",
@@ -492,19 +425,6 @@ var abi = {
         }
       ],
       "name": "getCollectionNftCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getListingPrice",
       "outputs": [
         {
           "internalType": "uint256",
@@ -653,6 +573,38 @@ var abi = {
         }
       ],
       "name": "getUserLikedNFTs",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "inCollectionArray",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "listingPrice",
       "outputs": [
         {
           "internalType": "uint256",

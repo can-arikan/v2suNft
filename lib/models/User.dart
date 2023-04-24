@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
 import 'package:sunftmobilev3/helpers/marketHelper.dart' as market_helper;
+import 'package:sunftmobilev3/helpers/NFTCollectionHelper.dart' as collection_helper;
 import 'package:sunftmobilev3/models/Nft.dart';
 import 'package:sunftmobilev3/models/NftCollection.dart';
 import 'package:sunftmobilev3/models/Category.dart' as categories;
@@ -41,23 +43,48 @@ class User {
   String toString() =>
       "User(address: $address, username: $username, profilePicture: $profilePicture, email: $email, NFTLikes: $nftLikes, collectionLikes: $collectionLikes)";
 
-  Future<List<NFT>> get ownedNFTs async {
-    var response = (await market_helper.query("fetchMyNFTs", [EthereumAddress.fromHex(address)]))[0];
-    var nfts = response.map((e) => NFT(
-        address: e["collection_address"],
-        nID: e["nID"],
-        name: e["collection"],
-        description: e["description"],
-        metaDataType: "png",
-        dataLink: e["tokenId"],
-        collectionName: e["collectionName"],
-        creator: e["creator"],
-        owner: address,
-        marketStatus:
-        e["marketStatus"])
-    );
-    return nfts.toList();
+  int isInMarket(dynamic market_items, dynamic nft) {
+    for (var i = 0; i < market_items.length; i++) {
+      if (market_items[i]["collection_address"] == nft["address"] && market_items[i]["tokenId"] == nft["tokenId"]){
+        return i;
+      }
+    }
+    return -1;
   }
+
+  Future<List<NFT>> get ownedNFTs async {
+    var market_response = (await market_helper.query("getAllCollections", []))[0];
+    var all_market_items = (await market_helper.query("fetchAllMarketItems", []))[0];
+    List<NFT> nfts = List.empty(growable: true);
+    for (var i = 0; i < market_response.length; i++) {
+      var response = (await collection_helper.query("getUsersNFTs", [EthereumAddress.fromHex(address)], market_response[i][1]))[0];
+      for (var j = 0; j < response.length; j++) {
+        dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [response[j][1].toInt()], market_response[i][1]))[0];
+        dynamic jsonNft = get(response[j][0]);
+        dynamic tmpNft = {
+          "address": market_response[i][1],
+          "tokenId": response[j][1]
+        };
+        dynamic status = isInMarket(all_market_items, tmpNft);
+        status = status != -1 ? all_market_items[i][7] ? "Sold": "Active": "Not In Market";
+        NFT tmp = NFT(
+            address: market_response[i][1],
+            name: jsonNft["name"],
+            description: jsonNft["description"],
+            dataLink: jsonNft["dataLink"],
+            collectionName: market_response[i][0],
+            creator: market_response[i][5],
+            owner: address,
+            tokenId: response[j][1],
+            marketStatus: status,
+            likeCount: nftLikes
+          );
+        nfts.add(tmp);
+      }
+    }
+    return nfts;
+  }
+
   Future<List<NFT>> get likedNFTs async {
     List jsonList = await getRequest("favorites", {"user": pk});
     List<NFT> ownedNFTs = jsonList.map((item) => NFT.fromJson(item)).toList();

@@ -126,21 +126,6 @@ class _NFTPageState extends State<NFTPage> {
                           Image(image: NetworkImage(widget.NFTInfo.dataLink)),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Unique ID: ",
-                                  style: decoration.addressBoxTextDecoration,
-                                ),
-                                Text(
-                                  widget.NFTInfo.nID.toString(),
-                                  style: decoration.addressBoxTextDecoration,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                             child: Text(
                               "Address: ${widget.NFTInfo.address}",
                               style: decoration.addressOfNftText,

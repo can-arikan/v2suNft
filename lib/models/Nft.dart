@@ -3,29 +3,28 @@ import 'TransactionHistory.dart';
 
 class NFT {
   final String address;
-  final int nID;
   final String name;
   final String? description;
-  final String metaDataType;
   final String dataLink;
   final String collectionName;
   final String creator;
   final String owner;
   final int marketStatus;
+  final int tokenId;
   int likeCount;
 
-  NFT({ required this.address, required this.nID,required this.name,
-    required this.description,required this.metaDataType,required this.dataLink,
+  NFT({ required this.address, required this.name,
+    required this.description,required this.dataLink, required this.tokenId,
     required this.collectionName, required this.creator,required this.owner,
     required this.marketStatus, this.likeCount = 0 });
 
   Map<String, dynamic> get pk {
-    return { "address": address, "nID": nID };
+    return { "address": address };
   }
 
   @override
-  String toString() => "NFT(address: $address, nID: $nID, name: $name, "
-      "description: $description, metaDataType: $metaDataType, "
+  String toString() => "NFT(address: $address, name: $name, "
+      "description: $description, "
       "dataLink: $dataLink, collectionName: $collectionName, "
       "creatorName: creatorName, currentOwner: $owner, "
       "marketStatus: $marketStatus, likeCount: $likeCount)";
@@ -33,10 +32,9 @@ class NFT {
   factory NFT.fromJson(Map<String, dynamic> json) {
     return NFT(
       address: json['address'].toString(),
-      nID: json['nID'],
+      tokenId: json["tokenId"],
       name: json['name'],
       description: json['description'],
-      metaDataType: json['metaDataType'],
       dataLink: json['nftFile'],
       collectionName: json['collectionName'],
       creator: json['creator'],
@@ -48,23 +46,22 @@ class NFT {
 
   Map<String, dynamic> toJson() => {
     'address': address,
-    'nID': nID,
     'name': name,
     'description': description,
-    'metaDataType':metaDataType,
     'dataLink': dataLink,
     'collectionName': collectionName,
     'creatorName': creator,
     'currentOwner': owner,
     'marketStatus': marketStatus,
+    'tokenId': tokenId
   };
 
   @override
   bool operator == (Object other) {
     if (other is NFT) {
-      return (other.address == address && other.nID == nID &&
+      return (other.address == address &&
           other.name == name && other.description == description &&
-          other.metaDataType == metaDataType && other.dataLink == dataLink &&
+          other.dataLink == dataLink &&
           other.collectionName == collectionName && other.creator == creator &&
           other.owner == owner && other.marketStatus == marketStatus &&
           other.likeCount == likeCount);

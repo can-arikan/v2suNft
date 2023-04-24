@@ -57,3 +57,21 @@ Future<dynamic> callContract(BuildContext context, String functionName, List<dyn
   }
   return response[0].toString();
 }
+
+Future<dynamic> query(String functionName, List<dynamic> parameters, String contractAddress) async {
+  var contract = DeployedContract(ContractAbi.fromJson(const JsonEncoder().convert(collectionAbi.abi["ABI"]), "Collection"), EthereumAddress.fromHex(contractAddress));
+  var contractFunction = contract.function(functionName);
+  List<dynamic> response;
+  try {
+    response = await ethereumProvider.ethClient.call(contract: ethereumProvider.suNFTmarketContract, function: contractFunction , params: parameters);
+  } catch (error, trace) {
+    if (kDebugMode) {
+      print(error);
+    }
+    if (kDebugMode) {
+      print(trace);
+    }
+    rethrow;
+  }
+  return response;
+}
