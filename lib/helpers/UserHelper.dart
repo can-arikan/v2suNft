@@ -23,14 +23,10 @@ Future<String> query(String functionName, List<dynamic> parameters) async{
   List<dynamic> response;
   try {
     response = await ethereumProvider.ethClient.call(contract: ethereumProvider.suCoinContract, function: sucoinBalFunc , params: parameters);
-
-
   } catch (error, trace) {
     print(error);
     print(trace);
     throw error;
   }
-
-
   return response[0].toString();
 }

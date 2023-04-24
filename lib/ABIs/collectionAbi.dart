@@ -279,6 +279,25 @@ const abi = {
       "inputs": [
         {
           "internalType": "address",
+          "name": "owner_",
+          "type": "address"
+        }
+      ],
+      "name": "getUserNFTs",
+      "outputs": [
+        {
+          "internalType": "string[]",
+          "name": "",
+          "type": "string[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
           "name": "owner",
           "type": "address"
         },

@@ -42,7 +42,7 @@ class User {
       "User(address: $address, username: $username, profilePicture: $profilePicture, email: $email, NFTLikes: $nftLikes, collectionLikes: $collectionLikes)";
 
   Future<List<NFT>> get ownedNFTs async {
-    var response = (await market_helper.query("fetchMyNFTs", []))[0].toString() as List<dynamic>;
+    var response = (await market_helper.query("fetchMyNFTs", [EthereumAddress.fromHex(address)]))[0];
     var nfts = response.map((e) => NFT(
         address: e["collection_address"],
         nID: e["nID"],

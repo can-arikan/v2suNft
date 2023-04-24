@@ -1,34 +1,6 @@
 var abi = {
-  "address": "0x673FA8265310c118393353f40970c7382efA7D34".toLowerCase(),
+  "address": "0x8d660a32Ec30dD59217BA9E1B61eF43e45De49c7".toLowerCase(),
   "ABI": [
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "collectionAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "collectionImage",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "description",
-          "type": "string"
-        },
-        {
-          "internalType": "string[]",
-          "name": "categories",
-          "type": "string[]"
-        }
-      ],
-      "name": "addExistingCollection",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
     {
       "inputs": [
         {
@@ -435,9 +407,9 @@ var abi = {
       "name": "findCollection",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "bool",
           "name": "",
-          "type": "uint256"
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
