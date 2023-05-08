@@ -14,7 +14,6 @@ import 'package:web3dart/credentials.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../../helpers/IpfsLoader.dart';
-import '../../helpers/marketHelper.dart';
 import '../../models/User.dart';
 import '../../providers/UserProvider.dart';
 import '../../providers/ethereumProvider.dart';

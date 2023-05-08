@@ -3,32 +3,15 @@ import 'package:sunftmobilev3/Decoration/AnimatedGradient.dart';
 import 'package:sunftmobilev3/decoration/NFTPageDecoration.dart';
 import 'package:sunftmobilev3/models/Nft.dart';
 import 'package:sunftmobilev3/Decoration/NFTPageDecoration.dart' as decoration;
-import "package:sunftmobilev3/components/transactionHistoryChart.dart";
+import 'package:sunftmobilev3/helpers/marketHelper.dart' as market_helper;
 import 'package:provider/provider.dart';
-
-import '../helpers/UserHelper.dart';
-import '../models/TransactionHistory.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:web3dart/web3dart.dart';
 import '../models/User.dart';
 import '../providers/UserProvider.dart';
+import '../providers/ethereumProvider.dart';
+import 'SellNFT.dart';
 
-/*
-CONDITIONS:
-  1- ON SALE (means item is on market also),
-  if user is not owner: can buy, else: can not buy.
-
-  2- ON AUCTION (same as above)
-  if user is not owner and is not the highest bidder: can bid
-  else if user is not owner and is highest bidder: can not bid (show the user has highest bid as reason)
-  else: can not bid (show the user is owner as reason)
-
-  3- NOT ON SALE (same as above)
-  if user is owner: can start auction or regular sale
-  else:user can see that item is not for sale.
-
-  4- NOT ON MARKET
-  if user is owner: can deposit item
-  else: user sees the item is not on market
- */
 class NFTPage extends StatefulWidget {
   final NFT nftInfo;
 
@@ -39,16 +22,65 @@ class NFTPage extends StatefulWidget {
 }
 
 class NFTPageState extends State<NFTPage> {
+  late final BigInt marketId;
+  late dynamic marketItems;
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () async {
+      marketItems = (await market_helper.query("fetchAllMarketItems", []))[0];
+      marketItems = marketItems.where((item) => item[7] == false).toList();
+      for (var itemId = 0; itemId < marketItems.length; itemId++) {
+        if (marketItems[itemId][0].toString() == widget.nftInfo.address && marketItems[itemId][3] == widget.nftInfo.tokenId) {
+          marketId = BigInt.from(itemId);
+        }
+      }
+    });
+    super.initState();
+  }
+
   GestureDetector paymentContainer(String marketStatus, bool isOwner) {
     String textOfBox = marketStatus;
     bool isActive = false;
     if (isOwner && textOfBox == "Not In Market") {
+      textOfBox = "Create Market Sale";
+      isActive = true;
+    } else if (!isOwner && textOfBox == "Not In Market") {
+      textOfBox = "This NFT is not on sale";
+      isActive = false;
+    } else if (isOwner && textOfBox == "In Market") {
+      textOfBox = "Cancel Sale";
+      isActive = true;
+    } else if (!isOwner && textOfBox == "In Market") {
+      textOfBox = "Buy This NFT";
       isActive = true;
     }
 
     return GestureDetector(
+      onTap: () async {
+        if (isActive) {
+          if (textOfBox == "Cancel Sale") {
+            var uri = await context.read<EthereumProvider>().getMetamaskUri();
+            market_helper.callContract(context, "cancelMarketSale", [marketId], value: EtherAmount.zero());
+            await launchUrlString(uri!, mode: LaunchMode.externalApplication);
+          }
+          else if (textOfBox == "Buy This NFT") {
+            var itemPrice = marketItems[marketId.toInt()][6];
+            var uri = await context.read<EthereumProvider>().getMetamaskUri();
+            market_helper.callContract(context, "createMarketSale", [marketId], value: EtherAmount.inWei(itemPrice));
+            await launchUrlString(uri!, mode: LaunchMode.externalApplication);
+          }
+          else if (textOfBox == "Create Market Sale") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SellNFT(nftInfo: widget.nftInfo,)),
+            );
+          }
+        }
+      },
       child: Container(
-        width: MediaQuery.of(context).size.width * 3 / 4,
+        width: MediaQuery.of(context).size.width * 6 / 7,
         height: 36,
         margin: const EdgeInsets.all(10),
         decoration: nftMarketStatusBox,
@@ -79,155 +111,49 @@ class NFTPageState extends State<NFTPage> {
   Widget build(BuildContext context) {
     final User? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.nftInfo.name),
-        backgroundColor: decoration.appBarColor,
-      ),
-      body: FutureBuilder<List<TransactionHistory>>(
-          future: widget.nftInfo.transactionHistory,
-          builder: (context, snapshot) {
-            // list of transaction histories is visible here
-            return SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: [
-                  const Positioned(child: AnimatedGradient()),
-                  Positioned(
-                      child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: SafeArea(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image(image: NetworkImage(widget.nftInfo.dataLink)),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-                            child: Text(
-                              "Address: ${widget.nftInfo.address}",
-                              style: decoration.addressOfNftText,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Container(
-                            color: Colors.white,
-                            width: MediaQuery.of(context).size.width * 3 / 4,
-                            height: 3,
-                            margin: const EdgeInsets.symmetric(vertical: 20),
-                          ),
-                          paymentContainer(widget.nftInfo.marketStatus,
-                              widget.nftInfo.owner == user?.address),
-                          //price history container.
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(left: 10, bottom: 20),
-                            child: Text(
-                              "Transaction History",
-                              textAlign: TextAlign.start,
-                              style: decoration.addressOfNftText,
-                            ),
-                          ),
-                          //LAGGY
-                          TransactionHistoryChart(
-                            history: snapshot.data ?? <TransactionHistory>[],
-                          ),
-                          //get owner data
-
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  color: decoration.listTileColor,
-                                ),
-                                child: FutureBuilder<User?>(
-                                    future:
-                                        getUser(address: widget.nftInfo.owner),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return ListTile(
-                                          title: Text(
-                                            snapshot.data!.username,
-                                            style:
-                                                decoration.listTileTitleStyle,
-                                          ),
-                                          subtitle: Text(widget.nftInfo.owner),
-                                          leading: CircleAvatar(
-                                            backgroundColor: Colors.black,
-                                            backgroundImage: NetworkImage(
-                                                snapshot.data!.profilePicture),
-                                          ),
-                                          trailing: const Text("Owner"),
-                                        );
-                                      } else {
-                                        return const SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: Center(
-                                                child:
-                                                    CircularProgressIndicator()));
-                                      }
-                                    }),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  color: decoration.listTileColor,
-                                ),
-                                child: FutureBuilder<User?>(
-                                    future: getUser(
-                                        address: widget.nftInfo.creator),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return ListTile(
-                                          title: Text(
-                                            snapshot.data!.username,
-                                            style:
-                                                decoration.listTileTitleStyle,
-                                          ),
-                                          subtitle:
-                                              Text(widget.nftInfo.creator),
-                                          leading: CircleAvatar(
-                                            backgroundColor: Colors.black,
-                                            backgroundImage: NetworkImage(
-                                                snapshot.data!.profilePicture),
-                                          ),
-                                          trailing: const Text("Creator"),
-                                        );
-                                      } else {
-                                        return const SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: Center(
-                                                child:
-                                                    CircularProgressIndicator()));
-                                      }
-                                    }),
-                              ),
-                            ],
-                          ),
-                          //Buy / bid Button
-                        ],
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(widget.nftInfo.name),
+          backgroundColor: decoration.appBarColor,
+        ),
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              const Positioned(child: AnimatedGradient()),
+              Positioned(
+                  child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image(image: NetworkImage(widget.nftInfo.dataLink)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                        child: Text("Address: ${widget.nftInfo.address}",
+                            style: decoration.addressOfNftText),
                       ),
-                    ),
-                  ))
-                ],
-              ),
-            );
-          }),
-    );
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                        child: Text("Likes: ${widget.nftInfo.likeCount}",
+                            style: decoration.addressOfNftText),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        width: MediaQuery.of(context).size.width * 3 / 4,
+                        height: 3,
+                        margin: const EdgeInsets.symmetric(vertical: 20),
+                      ),
+                      paymentContainer(widget.nftInfo.marketStatus,
+                          widget.nftInfo.owner == user?.address)
+                    ],
+                  ),
+                ),
+              ))
+            ],
+          ),
+        ));
   }
 }

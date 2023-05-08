@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sunftmobilev3/components/Containers/NFTContainer.dart';
 import 'package:sunftmobilev3/helpers/NFTHelper.dart';
-import 'package:sunftmobilev3/helpers/UserHelper.dart';
 import 'package:sunftmobilev3/models/NftCollection.dart';
 import 'package:sunftmobilev3/decoration/AnimatedGradient.dart';
 import 'package:sunftmobilev3/decoration/CollectionPageDecoration.dart'
@@ -45,14 +44,13 @@ class CollectionPageState extends State<CollectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Stack(
           children: [
-            Positioned(
+            const Positioned(
               child: AnimatedGradient(),
             ),
             Positioned(
@@ -92,41 +90,12 @@ class CollectionPageState extends State<CollectionPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Watchlist: ${widget.collectionInfo.numLikes}",
-                                style: decoration.collectionNameTextStyle,
-                              ),
-                              Text(
                                 "Likes: ${widget.collectionInfo.nftLikes}",
                                 style: decoration.collectionNameTextStyle,
                               ),
                             ],
                           ),
                         ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => {
-                        if (userFollowsThis != null)
-                          {
-                            user!.watchListCollection(
-                                widget.collectionInfo.address!,
-                                userFollowsThis!)
-                          }
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 3 / 4,
-                        height: 30,
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: decoration.collectionNameBoxDecoration,
-                        child: Text(
-                          (userFollowsThis != null)
-                              ? ((userFollowsThis!)
-                                  ? "Remove this collection from watchlist"
-                                  : "watchlist this collection")
-                              : "Loading",
-                          style: decoration.collectionDescriptionTextStyle,
-                        ),
                       ),
                     ),
                     Container(
@@ -155,34 +124,6 @@ class CollectionPageState extends State<CollectionPage> {
                             ),
                     ),
                     Container(
-                      decoration: decoration.collectionOwnerBoxDecoration,
-                      margin: const EdgeInsets.all(20),
-                      padding: const EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Created by: ${widget.collectionInfo.owner}",
-                            style: decoration.collectionOwnerTextStyle,
-                          ),
-                          FutureBuilder<User?>(
-                              future: getUser(
-                                  username: widget.collectionInfo.owner),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        snapshot.data!.profilePicture),
-                                  );
-                                } else {
-                                  return const CircleAvatar();
-                                }
-                              }),
-                        ],
-                      ),
-                    ),
-                    Container(
                         padding: const EdgeInsets.only(left: 20),
                         width: MediaQuery.of(context).size.width,
                         child: Text(
@@ -192,8 +133,7 @@ class CollectionPageState extends State<CollectionPage> {
                     ListViewContainer<NFT, NFTContainer>(
                       parameterizedContainerConstructor:
                           NFTContainer.parameterized,
-                      future: getNFTsByCollection(
-                          {"collection": widget.collectionInfo.address}),
+                      future: getNFTsByCollection(widget.collectionInfo.address!),
                     ),
                   ],
                 ),

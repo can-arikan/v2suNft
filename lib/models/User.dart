@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:sunftmobilev3/helpers/marketHelper.dart' as market_helper;
@@ -9,7 +10,6 @@ import 'package:sunftmobilev3/models/Nft.dart';
 import 'package:sunftmobilev3/models/NftCollection.dart';
 import 'package:sunftmobilev3/models/Category.dart' as categories;
 import 'package:web3dart/credentials.dart';
-import '../backend/requests.dart';
 
 class User {
   final String address;
@@ -43,9 +43,9 @@ class User {
   String toString() =>
       "User(address: $address, username: $username, profilePicture: $profilePicture, email: $email, NFTLikes: $nftLikes, collectionLikes: $collectionLikes)";
 
-  int isInMarket(dynamic market_items, dynamic nft) {
-    for (var i = 0; i < market_items.length; i++) {
-      if (market_items[i]["collection_address"] == nft["address"] && market_items[i]["tokenId"] == nft["tokenId"]){
+  int isInMarket(dynamic marketItems, dynamic nft) {
+    for (var i = 0; i < marketItems.length; i++) {
+      if (marketItems[i][0].toString() == nft["address"] && marketItems[i][3] == nft["tokenId"] && marketItems[i][7] == false){
         return i;
       }
     }
@@ -53,27 +53,27 @@ class User {
   }
 
   Future<List<NFT>> get ownedNFTs async {
-    var market_response = (await market_helper.query("getAllCollections", []))[0];
-    var all_market_items = (await market_helper.query("fetchAllMarketItems", []))[0];
+    var marketResponse = (await market_helper.query("getAllCollections", []))[0];
+    var allMarketItems = (await market_helper.query("fetchAllMarketItems", []))[0];
     List<NFT> nfts = List.empty(growable: true);
-    for (var i = 0; i < market_response.length; i++) {
-      var response = (await collection_helper.query("getUserNFTs", [EthereumAddress.fromHex(address)], market_response[i][1].toString()))[0];
+    for (var i = 0; i < marketResponse.length; i++) {
+      var response = (await collection_helper.query("getUserNFTs", [EthereumAddress.fromHex(address)], marketResponse[i][1].toString()))[0];
       for (var j = 0; j < response.length; j++) {
-        dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [response[j][1]], market_response[i][1].toString()))[0].length;
+        dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [response[j][1]], marketResponse[i][1].toString()))[0].length;
         dynamic jsonNft = const JsonDecoder().convert((await get(Uri.parse(response[j][0]))).body);
         dynamic tmpNft = {
-          "address": market_response[i][1].toString(),
+          "address": marketResponse[i][1].toString(),
           "tokenId": response[j][1]
         };
-        dynamic status = isInMarket(all_market_items, tmpNft);
-        status = status != -1 ? all_market_items[i][7] ? "Sold": "Active": "Not In Market";
+        dynamic status = isInMarket(allMarketItems, tmpNft);
+        status = (status != -1 ? "In Market" : "Not In Market");
         NFT tmp = NFT(
-            address: market_response[i][1].toString(),
+            address: marketResponse[i][1].toString(),
             name: jsonNft["name"],
             description: jsonNft["description"],
             dataLink: jsonNft["image"],
-            collectionName: market_response[i][0],
-            creator: market_response[i][5].toString(),
+            collectionName: marketResponse[i][0],
+            creator: marketResponse[i][5].toString(),
             owner: address,
             tokenId: response[j][1],
             marketStatus: status,
@@ -86,46 +86,71 @@ class User {
   }
 
   Future<List<NFT>> get likedNFTs async {
-    List jsonList = await getRequest("favorites", {"user": pk});
-    List<NFT> ownedNFTs = jsonList.map((item) => NFT.fromJson(item)).toList();
-    return ownedNFTs;
+    return await getAllUserLikedNfts();
   }
 
-  Future<bool> userLikedNFT(Map<String, dynamic> nftInfo) async {
-    final List jsonList =
-        await getRequest("favorites", {...nftInfo, "user": pk});
+  Future<List<NFT>> getAllUserLikedNfts() async {
+    var allMarketItems = (await market_helper.query("fetchAllMarketItems", []))[0];
+    var collections = (await market_helper.query("getAllCollectionsAddresses", []))[0];
+    List<NFT> nfts = List.empty(growable: true);
+    for (var i in collections) {
+      var tokenCount = (await collection_helper.query("currentTokenId", [], i.toString()))[0];
+      for (var tokenId = 0; tokenId < int.parse(tokenCount.toString()); tokenId++){
+        var nftWebAddress = (await collection_helper.query("tokenURI", [BigInt.from(tokenId)], i.toString()))[0];
+        dynamic jsonNft = const JsonDecoder().convert((await get(Uri.parse(nftWebAddress))).body);
+        dynamic tmpNft = {
+          "address": i.toString(),
+          "tokenId": tokenId
+        };
+        var collectionName = (await collection_helper.query("name", [], i.toString()))[0];
+        var nftOwner = (await collection_helper.query("ownerOf", [BigInt.from(tokenId)], i.toString()))[0];
+        dynamic status = isInMarket(allMarketItems, tmpNft);
+        status = status != -1 ? "In Market" : "Not In Market";
+        var likers = (await collection_helper.query("getAllLiked", [], i.toString()))[0];
+        dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [BigInt.from(tokenId)], i.toString()))[0].length;
+        bool isUserLiked = likers.contains(i);
+        if (isUserLiked) {
+          nfts.add(
+            NFT(
+              address: i.toString(),
+              name: jsonNft["name"],
+              description: jsonNft["description"],
+              dataLink: jsonNft["image"],
+              tokenId: BigInt.from(tokenId),
+              collectionName: collectionName,
+              creator: nftOwner,
+              owner: address,
+              marketStatus: status,
+              likeCount: nftLikes
+            )
+          );
+        }
+      }
+    }
+    return nfts;
+  }
+  
+  Future<List> getUserLikedNfts(NFT nft) async {
+    List likedAddresses = (await collection_helper.query("getNFTsAllLiked", [nft.tokenId], nft.address))[0];
+    return likedAddresses.where((element) => element.toString() == address).toList();
+  }
+
+  Future<bool> userLikedNFT(NFT nftInfo) async {
+    var jsonList = await getUserLikedNfts(nftInfo);
     return jsonList.isNotEmpty;
   }
 
-  Future<bool> likeNFT(Map<String, dynamic> nftInfo,bool liked) async {
-    if(liked){
-      return (await deleteRequest("favorites", {...nftInfo, "user": pk}));
+  Future<bool> likeNFT(NFT nftInfo,bool liked, BuildContext context) async {
+    try {
+      await
+      await collection_helper.callContract(context, "likeNFT", [nftInfo.tokenId], contractAddress: nftInfo.address);
+      return true;
     }
-    return (await postRequest("favorites", {...nftInfo, "user": pk}));
-  }
-
-  Future<bool> userWatchListedCollection(String address) async {
-    final List jsonList =
-    await getRequest("watchLists", {"nftCollection": address, "user": pk});
-    return jsonList.isNotEmpty;
-  }
-
-  Future<bool> watchListCollection(String address, bool watchListed) async {
-    if(watchListed){
-      return (await deleteRequest("watchLists", {"nftCollection": address, "user": pk}));
+    catch (e) {
+      return false;
     }
-    return (await postRequest("watchLists", {"nftCollection": address, "user": pk}));
   }
 
-  Future<List<NFTCollection>> get watchlistedCollections async {
-    List jsonList = await getRequest("watchLists", {"user": pk});
-    if (kDebugMode) {
-      print(jsonList);
-    }
-    List<NFTCollection> watchListedCollections = jsonList.map((item) => NFTCollection.fromJson(item)).toList();
-
-    return watchListedCollections;
-  }
   Future<List<NFTCollection>> get ownedCollections async {
     dynamic jsonList = (await market_helper.query("getMyCollections", [EthereumAddress.fromHex(address)])
         .onError((error, stackTrace) {
@@ -149,6 +174,7 @@ class User {
     List<NFTCollection> ownedCollections = itemList.map((item) => NFTCollection.fromJson(item)).toList();
     return ownedCollections;
   }
+
   Future<List<categories.Category>> get availableCategories async {
     dynamic response = await market_helper.query("getCategories", [])
     .onError((error, stackTrace) {
@@ -173,12 +199,5 @@ class User {
       cats.add(newCat);
     }
     return cats;
-  }
-  Future<bool> watchLists(String address) async {
-    List isCollectionFollowed = await getRequest("watchLists", {"user": pk,"nftCollection": address});
-    if (kDebugMode) {
-      print(isCollectionFollowed);
-    }
-    return (isCollectionFollowed.isNotEmpty);
   }
 }

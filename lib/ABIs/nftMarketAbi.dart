@@ -1,6 +1,19 @@
 var abi = {
-  "address": "0x6982947e0B522fDA7F5B4b50089b61db15Bd027E".toLowerCase(),
+  "address": "0x22Cac5E04AD63d3C192eDBC397b48ebDbc0ED0c2".toLowerCase(),
   "ABI": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "marketTokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelMarketSale",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
     {
       "inputs": [
         {

@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:web3dart/contracts.dart';
 
-import 'Nft.dart';
-import "../backend/requests.dart";
 import "package:sunftmobilev3/providers/ethereumProvider.dart" as ethereum_provider;
 
 Future<dynamic> query(DeployedContract collectionContract, String functionName, List<dynamic> parameters) async {
@@ -75,15 +73,6 @@ class NFTCollection {
     'categories': categories,
     "NFTLikes": nftLikes,
   };
-
-  Future<List<NFT>> get NFTs async {
-    List<NFT> nfts = <NFT>[];
-    if (pk != null) {
-        final List jsonList = await getRequest("nfts", {"collection": pk });
-        nfts = jsonList.map((item) => NFT.fromJson(item)).toList();
-    }
-    return nfts;
-  }
 
   @override
   String toString() => "NFTCollection(address: $address, name: $name, description: $description, collectionImage: $collectionImage, numLikes: $numLikes, owner: $owner, categories: $categories, NFTLikes: $nftLikes)";

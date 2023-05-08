@@ -1,6 +1,3 @@
-import "../backend/requests.dart";
-import 'TransactionHistory.dart';
-
 class NFT {
   final String address;
   final String name;
@@ -16,7 +13,7 @@ class NFT {
   NFT({ required this.address, required this.name,
     required this.description,required this.dataLink, required this.tokenId,
     required this.collectionName, required this.creator,required this.owner,
-    required this.marketStatus, this.likeCount = 0 });
+    required this.marketStatus, required this.likeCount });
 
   Map<String, dynamic> get pk {
     return { "address": address };
@@ -68,12 +65,4 @@ class NFT {
     }
     return false;
   }
-
-  Future<List<TransactionHistory>> get transactionHistory async {
-    List JSONList = await getRequest("transactionHistory", pk);
-    List<TransactionHistory> history = JSONList.map((item) => TransactionHistory.fromJson(item)).toList();
-    history.sort((e1, e2) => e1.date.compareTo(e2.date));
-    return history;
-  }
-
 }

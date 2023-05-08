@@ -57,6 +57,14 @@ var registerUsernameFieldInputDecoration = InputDecoration(
     color: registerButtonColors
   ),
 );
+var priceInputDecoration = InputDecoration(
+  hintText: "Price",
+  border: InputBorder.none,
+  suffixIcon: Icon(
+      Icons.currency_bitcoin_outlined,
+      color: registerButtonColors
+  ),
+);
 var registerPasswordFieldInputDecoration = InputDecoration(
   hintText: "New Password",
   border: InputBorder.none,

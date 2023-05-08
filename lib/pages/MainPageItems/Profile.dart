@@ -2,18 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sunftmobilev3/components/Containers/NFTCollectionContainer.dart';
 import 'package:sunftmobilev3/components/ListViewContainer.dart';
 import "package:sunftmobilev3/decoration/MainPageItemsDecoration/ProfileDecoration.dart"
     as decoration;
 import 'package:sunftmobilev3/models/Nft.dart';
 import 'package:sunftmobilev3/components/containers/NFTContainer.dart';
-import 'package:sunftmobilev3/models/NftCollection.dart';
 import 'package:provider/provider.dart';
 import '../../models/User.dart';
 import '../../providers/UserProvider.dart';
 import '../DepositWithdraw.dart';
-import "package:sunftmobilev3/helpers/UserHelper.dart" as userHelper;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -30,9 +27,7 @@ class _ProfilePageState extends State<ProfilePage>
     ),
     Tab(
       icon: Icon(CupertinoIcons.heart_fill),
-    ),
-    Tab(icon: Icon(Icons.collections))
-// Tab(icon: Icon(Icons.bookmark))
+    )
   ];
 
   late TabController _tabController;
@@ -60,9 +55,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    //@todo get this data from backend
     final User? user = Provider.of<UserProvider>(context).user;
-    final PageController pageController = PageController();
     if (user != null) {
       return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -106,62 +99,14 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                       //balance Sheet
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          const SizedBox(width: 30,),
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "User Balance",
-                                      style: decoration.balanceSheetText,
-                                      textAlign: TextAlign.start,
-                                    ),
-                                    const Icon(
-                                      CupertinoIcons.bitcoin,
-                                      color: Colors.white,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    FutureBuilder<String>(
-                                        future: userHelper
-                                            .query("getMarketBalance", []),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            return Text(
-                                              snapshot.data!,
-                                              style:
-                                                  decoration.balanceSheetText,
-                                              textAlign: TextAlign.start,
-                                            );
-                                          } else {
-                                            return Text(
-                                              "loading",
-                                              style:
-                                                  decoration.balanceSheetText,
-                                            );
-                                          }
-                                        }),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
                                     "Likes",
@@ -223,12 +168,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ListViewContainer<NFT, NFTContainer>(
                       parameterizedContainerConstructor:
                           NFTContainer.parameterized,
-                      future: user.likedNFTs),
-                if (_index == 2)
-                  ListViewContainer<NFTCollection, NFTCollectionContainer>(
-                      parameterizedContainerConstructor:
-                          NFTCollectionContainer.parameterized,
-                      future: user.watchlistedCollections)
+                      future: user.likedNFTs)
               ]));
     } else {
       return noUser(context);

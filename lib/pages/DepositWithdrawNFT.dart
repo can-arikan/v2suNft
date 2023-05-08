@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import "package:sunftmobilev3/decoration/DepositWithdrawNFTDecoration.dart" as decoration;
+import "package:sunftmobilev3/decoration/DepositWithdrawNFTDecoration.dart"
+    as decoration;
 import 'package:provider/provider.dart';
 
 import '../Decoration/AnimatedGradient.dart';
@@ -8,21 +9,19 @@ import '../components/ListViewContainer.dart';
 import '../models/Nft.dart';
 import '../models/User.dart';
 import '../providers/UserProvider.dart';
-class depositWithdrawNFT extends StatefulWidget {
-  const depositWithdrawNFT({Key? key}) : super(key: key);
+
+class DepositWithdrawNFT extends StatefulWidget {
+  const DepositWithdrawNFT({Key? key}) : super(key: key);
 
   @override
-  _depositWithdrawNFTState createState() => _depositWithdrawNFTState();
+  DepositWithdrawNFTState createState() => DepositWithdrawNFTState();
 }
 
-class _depositWithdrawNFTState extends State<depositWithdrawNFT> {
-
+class DepositWithdrawNFTState extends State<DepositWithdrawNFT> {
   TextEditingController amount = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider
-        .of<UserProvider>(context)
-        .user;
+    final User? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -35,29 +34,27 @@ class _depositWithdrawNFTState extends State<depositWithdrawNFT> {
               keyboardType: TextInputType.number,
               cursorColor: Colors.black87,
               controller: amount,
-              decoration: decoration.inputDecors
-          ),
+              decoration: decoration.inputDecors),
         ),
-
-
       ),
       body: Stack(
         children: [
-          Positioned(child: AnimatedGradient()),
+          const Positioned(child: AnimatedGradient()),
           Positioned(
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
-                  ListViewContainer<NFT,NFTContainer>(
-                    parameterizedContainerConstructor: NFTContainer.parameterized,
-                    future: user?.ownedNFTs,direction: Axis.vertical,)
+                  ListViewContainer<NFT, NFTContainer>(
+                    parameterizedContainerConstructor:
+                        NFTContainer.parameterized,
+                    future: user?.ownedNFTs,
+                    direction: Axis.vertical,
+                  )
                 ],
-
-
               ),
             ),
-            )
+          )
         ],
       ),
     );

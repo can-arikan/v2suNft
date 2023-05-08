@@ -2,22 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:sunftmobilev3/decoration/AnimatedGradient.dart';
 import "package:sunftmobilev3/decoration/DepositWithdrawDecoration.dart" as decoration;
 import 'package:sunftmobilev3/models/Nft.dart';
-import 'package:provider/provider.dart';
-import 'package:web3dart/credentials.dart';
-
-import "../helpers/UserHelper.dart" as userHelper;
-import '../models/User.dart';
-import '../providers/UserProvider.dart';
-import "package:sunftmobilev3/helpers/marketHelper.dart" as marketHelper;
 import "package:sunftmobilev3/pages/DepositWithdrawNFT.dart";
 class DepositWithdraw extends StatefulWidget {
   const DepositWithdraw({Key? key}) : super(key: key);
 
   @override
-  _DepositWithdrawState createState() => _DepositWithdrawState();
+  DepositWithdrawState createState() => DepositWithdrawState();
 }
 
-class _DepositWithdrawState extends State<DepositWithdraw> {
+class DepositWithdrawState extends State<DepositWithdraw> {
 
   NFT? dropDownValue;
 
@@ -25,19 +18,10 @@ class _DepositWithdrawState extends State<DepositWithdraw> {
   TextEditingController depositAmount = TextEditingController();
   @override
   Widget build(BuildContext context) {
-
-    final User? user = Provider
-        .of<UserProvider>(context)
-        .user;
-
-
-
-
     return Scaffold(
-
       body: Stack(
         children: [
-          Positioned(child: AnimatedGradient()),
+          const Positioned(child: AnimatedGradient()),
           Positioned(child:
           SafeArea(
             child: SingleChildScrollView(
@@ -55,13 +39,13 @@ class _DepositWithdrawState extends State<DepositWithdraw> {
                   ),
                   //NEW IDEA
 
-                  Padding(padding: EdgeInsets.only(top:20)),
+                  const Padding(padding: EdgeInsets.only(top:20)),
                   GestureDetector(
                      onTap: ()=>{
 
                        Navigator.push(
                            context,
-                           MaterialPageRoute(builder: (context) => depositWithdrawNFT()
+                           MaterialPageRoute(builder: (context) => const DepositWithdrawNFT()
                            )
                        )
                      },
@@ -94,7 +78,7 @@ class _DepositWithdrawState extends State<DepositWithdraw> {
                     ),
                   ),
                       ),
-                  Padding(padding: EdgeInsets.all(8)),
+                  const Padding(padding: EdgeInsets.all(8)),
                   GestureDetector(
                     onTap: ()=>{
 
@@ -119,7 +103,6 @@ class _DepositWithdrawState extends State<DepositWithdraw> {
                         ),
                         child: Center(
                           child: Text(
-
                             "Choose a SUNFT to deposit..",
                             style: decoration.withdrawNFT,
                             textAlign: TextAlign.center,
@@ -127,118 +110,12 @@ class _DepositWithdrawState extends State<DepositWithdraw> {
                         ),
                       ),
                     ),
-                  ),
-                  Padding(padding: EdgeInsets.all(20)),
-                  Center(
-                      child: Text("Your wallets SUcoin balance is: ", style: decoration.dropDownItemTextStyle,)),
-
-                  FutureBuilder<String>(
-                      future: userHelper.query("balanceOf",[EthereumAddress.fromHex(user!.address)]),
-                      builder: (context, snapshot) {
-                        if(snapshot.hasData){
-                          return Text(snapshot.data!, style: decoration.dropDownItemTextStyle,);
-                        }
-                        else{
-                          return const SizedBox( width:50, height: 50,child: Center(child:CircularProgressIndicator()));
-                        }
-
-                      }
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(25),
-                    height: 50,
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    decoration: decoration.loginFormField,
-                    child: TextFormField(
-                        textAlignVertical: TextAlignVertical.center,
-                        keyboardType: TextInputType.number,
-                        cursorColor: Colors.black87,
-                        controller: depositAmount,
-                        decoration: decoration.inputDecors
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: ()=>{
-                      print(depositAmount.text)
-                    },
-                    child: Container(
-
-                      decoration: decoration.withdrawButton,
-                      width: MediaQuery.of(context).size.width * 3/4,
-                      height: 50,
-                      child: Center(child: Text("Deposit SUcoins..",style: decoration.withdrawNFT,) ),
-                    ),
-                  ),
-
-                  Padding(padding: EdgeInsets.all(20)),
-
-                  Center(
-                      child: Text("Your Withdrawable SUcoin balance on the SUNFT market is : ", style: decoration.dropDownItemTextStyle,textAlign: TextAlign.center,)),
-                  FutureBuilder<String>(
-                      future: userHelper.query("getMarketBalance",[]),
-                      builder: (context, snapshot) {
-                        if(snapshot.hasData){
-                          return Text(snapshot.data!, style: decoration.dropDownItemTextStyle,);
-                        }
-                        else{
-                          return const SizedBox( width:50, height: 50,child: Center(child:CircularProgressIndicator()));
-                        }
-
-                      }
-                  ),
-
-                  Container(
-                    margin: const EdgeInsets.all(25),
-                    height: 50,
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    decoration: decoration.loginFormField,
-                    child: TextFormField(
-                        textAlignVertical: TextAlignVertical.center,
-                        keyboardType: TextInputType.number,
-                        cursorColor: Colors.black87,
-                        controller: withdrawAmount,
-                        decoration: decoration.inputDecors
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: ()=>{
-                      print(withdrawAmount.text)
-                    },
-                    child: Container(
-
-                      decoration: decoration.withdrawButton,
-                      width: MediaQuery.of(context).size.width * 3/4,
-                      height: 50,
-                      child: Center(child: Text("Withdraw SUcoins..",style: decoration.withdrawNFT,) ),
-                    ),
-                  ),
-
-
-
-                  /*
-                  OLD IDEA
-                  FutureBuilder(
-                    future: user?.ownedNFTs,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return snapshot.hasData
-                          ? Container(
-                        height: 200,
-
-                          )
-                          : Container(
-                        child: Center(
-                          child: Text('Loading...'),
-                        ),
-                      );
-                    },
-                  ),
-                  */
+                  )
                 ],
               ),
             )
           ),
           ),
-
         ],
       ),
     );
