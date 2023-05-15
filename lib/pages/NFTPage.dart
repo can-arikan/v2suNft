@@ -22,14 +22,13 @@ class NFTPage extends StatefulWidget {
 }
 
 class NFTPageState extends State<NFTPage> {
-  late final BigInt marketId;
+  late BigInt marketId;
   late dynamic marketItems;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
       marketItems = (await market_helper.query("fetchAllMarketItems", []))[0];
-      marketItems = marketItems.where((item) => item[7] == false).toList();
       for (var itemId = 0; itemId < marketItems.length; itemId++) {
         if (marketItems[itemId][0].toString() == widget.nftInfo.address && marketItems[itemId][3] == widget.nftInfo.tokenId) {
           marketId = BigInt.from(itemId);

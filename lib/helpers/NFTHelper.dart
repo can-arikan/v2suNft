@@ -55,10 +55,10 @@ Future<List<NFT>> getTrendingNFTs({String? collectionAddress}) async {
           "name", [], collection.address!))[0];
       var nftOwner = (await collection_helper.query(
           "ownerOf", [BigInt.from(tokenId)], collection.address!))[0];
-      dynamic status = isInMarket(allMarketItems, tmpNft);
-      status = (status != -1 ? "In Market" : "Not In Market");
+      var marketIdx = isInMarket(allMarketItems, tmpNft);
+      var status = (marketIdx != -1 ? "In Market" : "Not In Market");
       var bigTokenId = BigInt.from(tokenId);
-      dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [BigInt.from(tokenId)], collection.address!))[0].length;
+      dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [bigTokenId], collection.address!))[0].length;
       nfts.add(
           NFT(
             address: collection.address!,
@@ -67,14 +67,15 @@ Future<List<NFT>> getTrendingNFTs({String? collectionAddress}) async {
             dataLink: jsonNft["image"],
             tokenId: bigTokenId,
             collectionName: collectionName,
-            creator: nftOwner.toString(),
-            owner: collection.owner,
+            creator: collection.owner,
+            owner: (marketIdx != -1 ? allMarketItems[marketIdx][4].toString() : nftOwner.toString()),
             marketStatus: status,
             likeCount: nftLikes
           )
       );
     }
   }
+  nfts = nfts.where((nft) => nft.marketStatus == "In Market").toList();
   nfts.sort((a, b) => a.likeCount.compareTo(b.likeCount));
   nfts = nfts.reversed.toList();
   return nfts;
