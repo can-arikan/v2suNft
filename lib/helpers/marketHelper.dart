@@ -29,7 +29,7 @@ Future<dynamic> callContract(BuildContext context, String functionName, List<dyn
   var contractFunction = ethereumProvider.suNFTmarketContract.function(functionName);
   var provider = await context.read<ethereumProvider.EthereumProvider>().getProvider();
   provider = provider ?? (throw Exception("Provider Is Not In The Context !!!"));
-  var cred = WalletConnectEthereumCredentials(provider: provider!);
+  var cred = WalletConnectEthereumCredentials(provider: provider);
   List<dynamic> response;
   try {
     var response2 = await ethereumProvider.ethClient.sendTransaction(

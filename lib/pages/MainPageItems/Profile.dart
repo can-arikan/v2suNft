@@ -21,6 +21,15 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
+  Widget dataLoading() {
+    return const Padding(
+      padding: EdgeInsets.all(40.0),
+      child: Center(
+          child: SizedBox(
+              width: 50, height: 50, child: CircularProgressIndicator())),
+    );
+  }
+
   final List<Tab> tabs = const <Tab>[
     Tab(
       icon: Icon(Icons.person),
@@ -30,9 +39,25 @@ class _ProfilePageState extends State<ProfilePage>
     )
   ];
 
+  User? user;
   late TabController _tabController;
   late VoidCallback _handleTabChange;
+  late Widget tabView;
   int _index = 0;
+
+  Widget tabBuilder(User user) {
+    if (_index == 0) {
+      return ListViewContainer<NFT, NFTContainer>(
+          parameterizedContainerConstructor:
+          NFTContainer.parameterized,
+          future: user.ownedNFTs).build(context);
+    } else {
+      return ListViewContainer<NFT, NFTContainer>(
+          parameterizedContainerConstructor:
+          NFTContainer.parameterized,
+          future: user.likedNFTs).build(context);
+    }
+  }
 
   @override
   void initState() {
@@ -41,9 +66,15 @@ class _ProfilePageState extends State<ProfilePage>
     _handleTabChange = () {
       setState(() {
         _index = _tabController.index;
+        if (user != null) {
+          tabView = tabBuilder(user!);
+        } else {
+          tabView = dataLoading();
+        }
       });
     };
     _tabController.addListener(_handleTabChange);
+    tabView = dataLoading();
   }
 
   @override
@@ -55,7 +86,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider.of<UserProvider>(context).user;
+    user = Provider.of<UserProvider>(context).user;
+    tabView = tabBuilder(user!);
     if (user != null) {
       return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -74,12 +106,12 @@ class _ProfilePageState extends State<ProfilePage>
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0, bottom: 10),
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(user.profilePicture),
+                          backgroundImage: NetworkImage(user!.profilePicture),
                           radius: 50,
                         ),
                       ),
                       Text(
-                        user.address,
+                        user!.address,
                         textAlign: TextAlign.center,
                         style: decoration.profileTextStyle,
                       ),
@@ -87,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage>
                         height: 10,
                       ),
                       Text(
-                        user.username,
+                        user!.username,
                         textAlign: TextAlign.center,
                         style: decoration.profileTextStyle,
                       ),
@@ -127,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   Padding(
                                     padding: const EdgeInsets.only(right: 20.0),
                                     child: Text(
-                                      user.nftLikes.toString(),
+                                      user!.nftLikes.toString(),
                                       style: decoration.balanceSheetText,
                                     ),
                                   ),
@@ -159,16 +191,7 @@ class _ProfilePageState extends State<ProfilePage>
                       )),
                     )),
                 TabBar(tabs: tabs, controller: _tabController),
-                if (_index == 0)
-                  ListViewContainer<NFT, NFTContainer>(
-                      parameterizedContainerConstructor:
-                          NFTContainer.parameterized,
-                      future: user.ownedNFTs),
-                if (_index == 1)
-                  ListViewContainer<NFT, NFTContainer>(
-                      parameterizedContainerConstructor:
-                          NFTContainer.parameterized,
-                      future: user.likedNFTs)
+                tabView
               ]));
     } else {
       return noUser(context);

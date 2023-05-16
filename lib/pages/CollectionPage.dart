@@ -5,12 +5,9 @@ import 'package:sunftmobilev3/models/NftCollection.dart';
 import 'package:sunftmobilev3/decoration/AnimatedGradient.dart';
 import 'package:sunftmobilev3/decoration/CollectionPageDecoration.dart'
     as decoration;
-import 'package:provider/provider.dart';
 
 import '../components/ListViewContainer.dart';
 import '../models/Nft.dart';
-import '../models/User.dart';
-import '../providers/UserProvider.dart';
 
 class CollectionPage extends StatefulWidget {
   const CollectionPage({Key? key, required this.collectionInfo})
@@ -22,23 +19,9 @@ class CollectionPage extends StatefulWidget {
 
 class CollectionPageState extends State<CollectionPage> {
   bool expandPressed = false;
-  bool? userFollowsThis;
-  void _getUserFollowedCollection(user) async {
-    var userLike = await user?.watchLists(widget.collectionInfo.address!);
-    setState(() {
-      userFollowsThis = userLike;
-    });
-  }
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      final User? user = Provider.of<UserProvider>(context, listen: false).user;
-      if (user != null) {
-        _getUserFollowedCollection(user);
-      }
-    });
-
     super.initState();
   }
 

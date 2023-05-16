@@ -24,22 +24,33 @@ class NFTPage extends StatefulWidget {
 class NFTPageState extends State<NFTPage> {
   late BigInt marketId;
   late dynamic marketItems;
+  var initialized = false;
+
+  Future<void> initialization() async {
+    marketItems = (await market_helper.query("fetchAllMarketItems", []))[0];
+    for (var itemId = 0; itemId < marketItems.length; itemId++) {
+      if (marketItems[itemId][0].toString() == widget.nftInfo.address && marketItems[itemId][3] == widget.nftInfo.tokenId) {
+        marketId = BigInt.from(itemId);
+      }
+    }
+    setState(() {
+      initialized = true;
+    });
+  }
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () async {
-      marketItems = (await market_helper.query("fetchAllMarketItems", []))[0];
-      for (var itemId = 0; itemId < marketItems.length; itemId++) {
-        if (marketItems[itemId][0].toString() == widget.nftInfo.address && marketItems[itemId][3] == widget.nftInfo.tokenId) {
-          marketId = BigInt.from(itemId);
-        }
-      }
-    });
+    initialization();
     super.initState();
   }
 
-  GestureDetector paymentContainer(String marketStatus, bool isOwner) {
+  Future<GestureDetector> paymentContainer(String marketStatus, bool isOwner) async {
     String textOfBox = marketStatus;
+    if (!initialized) {
+      await initialization();
+    }
+    var itemPrice = marketItems[marketId.toInt()][6];
+    var price = EtherAmount.fromBigInt(EtherUnit.wei, itemPrice).getValueInUnit(EtherUnit.ether).toString();
     bool isActive = false;
     if (isOwner && textOfBox == "Not In Market") {
       textOfBox = "Create Market Sale";
@@ -51,10 +62,9 @@ class NFTPageState extends State<NFTPage> {
       textOfBox = "Cancel Sale";
       isActive = true;
     } else if (!isOwner && textOfBox == "In Market") {
-      textOfBox = "Buy This NFT";
+      textOfBox = "Buy This NFT: $price matic";
       isActive = true;
     }
-
     return GestureDetector(
       onTap: () async {
         if (isActive) {
@@ -63,8 +73,7 @@ class NFTPageState extends State<NFTPage> {
             market_helper.callContract(context, "cancelMarketSale", [marketId], value: EtherAmount.zero());
             await launchUrlString(uri!, mode: LaunchMode.externalApplication);
           }
-          else if (textOfBox == "Buy This NFT") {
-            var itemPrice = marketItems[marketId.toInt()][6];
+          else if (textOfBox == "Buy This NFT: $price matic") {
             var uri = await context.read<EthereumProvider>().getMetamaskUri();
             market_helper.callContract(context, "createMarketSale", [marketId], value: EtherAmount.inWei(itemPrice));
             await launchUrlString(uri!, mode: LaunchMode.externalApplication);
@@ -103,6 +112,15 @@ class NFTPageState extends State<NFTPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget dataLoading() {
+    return const Padding(
+      padding: EdgeInsets.all(40.0),
+      child: Center(
+          child: SizedBox(
+              width: 50, height: 50, child: CircularProgressIndicator())),
     );
   }
 
@@ -145,8 +163,14 @@ class NFTPageState extends State<NFTPage> {
                         height: 3,
                         margin: const EdgeInsets.symmetric(vertical: 20),
                       ),
-                      paymentContainer(widget.nftInfo.marketStatus,
-                          widget.nftInfo.owner == user?.address)
+                      FutureBuilder(future: paymentContainer(widget.nftInfo.marketStatus,
+                          widget.nftInfo.owner == user?.address), builder: (BuildContext context, AsyncSnapshot<Widget> snapcshot) {
+                        if (snapcshot.hasData) {
+                          return snapcshot.data!;
+                        } else {
+                          return dataLoading();
+                        }
+                      }),
                     ],
                   ),
                 ),

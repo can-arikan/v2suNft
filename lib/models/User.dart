@@ -106,22 +106,22 @@ class User {
         var nftOwner = (await collection_helper.query("ownerOf", [BigInt.from(tokenId)], i.toString()))[0];
         dynamic status = isInMarket(allMarketItems, tmpNft);
         status = status != -1 ? "In Market" : "Not In Market";
-        var likers = (await collection_helper.query("getAllLiked", [], i.toString()))[0];
-        dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [BigInt.from(tokenId)], i.toString()))[0].length;
-        bool isUserLiked = likers.contains(i);
+        dynamic nftLikes = (await collection_helper.query("getNFTsAllLiked", [BigInt.from(tokenId)], i.toString()))[0];
+        bool isUserLiked = nftLikes.contains(EthereumAddress.fromHex(address));
         if (isUserLiked) {
+          var token = BigInt.from(tokenId);
           nfts.add(
             NFT(
               address: i.toString(),
               name: jsonNft["name"],
               description: jsonNft["description"],
               dataLink: jsonNft["image"],
-              tokenId: BigInt.from(tokenId),
+              tokenId: token,
               collectionName: collectionName,
-              creator: nftOwner,
+              creator: nftOwner.toString(),
               owner: address,
               marketStatus: status,
-              likeCount: nftLikes
+              likeCount: nftLikes.length
             )
           );
         }
@@ -142,7 +142,6 @@ class User {
 
   Future<bool> likeNFT(NFT nftInfo,bool liked, BuildContext context) async {
     try {
-      await
       await collection_helper.callContract(context, "likeNFT", [nftInfo.tokenId], contractAddress: nftInfo.address);
       return true;
     }
